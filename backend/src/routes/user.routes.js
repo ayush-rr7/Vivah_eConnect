@@ -1,0 +1,16 @@
+import express from 'express'
+import userController from '../controller/userController.js'
+import upload from "../config/cloudinary.js";
+
+const userRouter = express.Router();
+
+
+
+userRouter.post('/user',upload.array("imageURL", 5),userController.addUser);
+userRouter.get('/user1',userController.getUser);
+userRouter.get('/user1/:id',userController.getUserById);
+userRouter.delete('/user/:id',userController.deleteUser);
+userRouter.put('/user',userController.updateUser);
+// userRouter.post('/userx',userController.connectionReq);
+
+export default userRouter;
