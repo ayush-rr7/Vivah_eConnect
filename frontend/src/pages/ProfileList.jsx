@@ -1,6 +1,6 @@
  import { useEffect,useState } from "react";
- import api from '../api/axios'
- import {getProfiles} from '../api/profileService'
+ import api from '../api/axios.js'
+ import {getProfiles} from '../api/profileService.js'
 //  import SkeletonCard from "../component/skeleton";
  import {SkeletonCard} from "../component/skeleton.jsx"
 
@@ -43,7 +43,7 @@ return (
   <div>
     <h1 className="text-2xl flex justify-center">Profiles</h1>
 
-    <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-4">
+    <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-4 mx-2">
 
       {loading
         ? Array(6).fill().map((_, i) => <SkeletonCard key={i} />)

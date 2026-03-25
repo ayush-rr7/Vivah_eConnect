@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { socket } from "../api/socket";
 import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios"
 import { getActiveProfileId } from "../utils/getActiveProfile";
@@ -10,6 +12,9 @@ function Chat() {
   const { user, loading } = useAuth();
   const { id: receiverProfileId } = useParams();
   const senderProfileId=getActiveProfileId();
+  const location = useLocation();
+ const profile = location.state?.profile;
+ console.log(profile);
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -106,7 +111,8 @@ useEffect(() => {
     <div className="p-4 m-5 border rounded">
 
       <h1>Welcome {user.Name}</h1>
-      <h2>Chat with {receiverProfileId}</h2>
+      {/* <h2>Chat with {receiverProfileId}</h2> */}
+      <h2>Chat with {profile?.name}</h2>
 
       <div>
         {messages.map((msg, i) => (

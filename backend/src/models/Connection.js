@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
 
 const connectionSchema =mongoose.Schema({
-   
-
   // senderId:{
   // type: mongoose.Schema.Types.ObjectId,
   //     ref: "User",

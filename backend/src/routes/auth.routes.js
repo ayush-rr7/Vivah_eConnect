@@ -1,18 +1,11 @@
 import express from 'express'
-// import authController from './controller/authController'
 import authController from '../controller/authController.js'
 import authenticateJWT from '../middleware/jwt.js';
-
+import { signupValidation, loginValidator } from "../validators/userValidator.js";
+import { validate } from "../middleware/validate.js";
 const authRouter = express.Router();
-
-// authRouter.use('/',(req,res)=>{
-//   console.log(req.url)
-//   res.send('<h1> Welcome to auth Page</h1>')
-// })
-
-
-authRouter.post('/signup',authController.signup);
-authRouter.post('/login',authController.login);
+authRouter.post('/signup',signupValidation, validate,authController.signup);
+authRouter.post('/login',loginValidator, validate, authController.login);
 authRouter.get('/me',authenticateJWT, authController.account);
 authRouter.post('/logout',authController.logout);
 

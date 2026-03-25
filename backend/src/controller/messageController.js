@@ -19,8 +19,6 @@ export const getChatHistory = async (req, res) => {
     }).sort({ createdAt: 1 }); // oldest first
 
     res.json(messages);
-    // console.log(messages);
-    // console.log(messages.text);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch messages' });

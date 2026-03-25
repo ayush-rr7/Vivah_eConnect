@@ -1,9 +1,9 @@
 
-
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-
+const {user,logout} =useAuth();
 const navigate = useNavigate();
 
 const handleMatches = () => {
@@ -22,10 +22,13 @@ const handleProfile = () => {
   navigate("/Account");
 };
 
-const handleLogout = () => {
-  localStorage.removeItem("token");
-  navigate("/login");
-};
+
+  
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+ 
 
 return (
 <div className="min-h-screen bg-gray-100 flex">

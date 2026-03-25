@@ -25,10 +25,7 @@ const socketAuth =  async (socket, next) => {
       process.env.JWT_SECRET
     );
 
-    // /* attach user to socket */
-    // socket.user = {
-    //   id: decoded.userId
-    // };
+    
  const profileId =
       socket.handshake.auth?.profileId ||
       socket.handshake.query?.profileId;
@@ -37,7 +34,7 @@ const socketAuth =  async (socket, next) => {
       return next(new Error("No profile selected"));
     }
 
-    // ✅ 5. Verify profile belongs to this user
+    // Verify profile belongs to this user
     const profile = await Profile.findOne({
       _id: profileId,
       userId: decoded.userId
@@ -47,7 +44,7 @@ const socketAuth =  async (socket, next) => {
       return next(new Error("Unauthorized profile access"));
     }
 
-    // ✅ 6. Attach BOTH user + profile
+    //  Attach BOTH user + profile
     socket.user = {
       id: decoded.userId
     };

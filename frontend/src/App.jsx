@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import ProtectedLayout from "./routes/ProtectedLayout.jsx";
+import PublicLayout from "./routes/PublicLayout.jsx";
+
 import Register from './pages/Signup.jsx'
 import Home from './pages/Home.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -21,24 +24,32 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
     
       <Navbar/> {/* Common across all pages */}
+       <main className="flex-1">
       <Routes>  
+          <Route element={<PublicLayout />}>
         <Route path="/" element={<Home/>}/>
+        <Route path="/signup" element={<Register/>}/>
+        <Route path="/login" element={<Login/>}/>
+        </Route>
+        
+         <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element ={<Dashboard/>}/>
         <Route path="/profiles" element={<ProfileList/>}/>
         <Route path="/profile/:id" element={<ProfileDetail/>}/>
-        <Route path="/signup" element={<Register/>}/>
-        <Route path="/login" element={<Login/>}/>
+
         <Route path="/register" element={<CreateProfile />} />
         <Route path="/connections" element={<Connection />} />
         <Route path="/Chat" element={<ChatConnection />} />
         <Route path="/Chat/:id" element={<Chat />} />
         <Route path="/Account" element={<MyAccount/>}/>
+         </Route>
         </Routes> 
+       </main>
         <Footer/>   
-    </>
+    </div>
   )
 }
 

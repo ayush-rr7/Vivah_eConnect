@@ -15,19 +15,17 @@ if(type === "received"){
 connections = await Connection.find({
 receiverProfileId: profileId,
 status: status
-});
-console.log("hi");
-
+}).populate("senderProfileId", " Name Age Location")
 }
 
-
 else if(type === "sent"){
-
 connections = await Connection.find({
 senderProfileId: profileId,
 status: status
-});
+}).populate("receiverProfileId", "Name Age Location")
 }
+
+
  console.log(connections);
   return res.json(connections);
 }catch(err){
@@ -40,8 +38,8 @@ res.status(500).json({ message: "Server error" });
 
 const connectionRequest = async (req, res) => {
   try {
-    console.log("babe is here");
-    console.log(req.body);
+   
+    // console.log(req.body);
     const senderProfileId = req.body.senderProfileId;
 const receiverProfileId = req.body.receiverProfileId;
 if(senderProfileId === receiverProfileId){
@@ -67,8 +65,8 @@ console.log(connection);
     res.status(201).json({
     success: true,
     message: "Connection Request Sent Sucessfully"
-  }); // 👈 send back to frontend
-    // console.log(savedConnection);
+  }); // send back to frontend
+   
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });

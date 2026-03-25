@@ -1,5 +1,6 @@
 import hero from '../assets/hero.png'
 import couple from '../assets/couple.png'
+import { Link } from 'react-router-dom'
 
 function Home(){
   return (
@@ -20,13 +21,12 @@ Connecting hearts, families, and traditions through meaningful relationships.
 </p>
 
 <div className="mt-8 flex gap-4">
-<button className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg transition">
-Create Profile
-</button>
+  <Link to="/signup"  className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg transition">Get Started</Link>
 
-<button className="border border-pink-600 hover:bg-pink-600 hover:text-white text-pink-600 px-6 py-3 rounded-lg transition">
+
+<Link to="/login"  className="border border-pink-600 hover:bg-pink-600 hover:text-white text-pink-600 px-6 py-3 rounded-lg transition">
 Explore Matches
-</button>
+</Link>
 </div>
 </div>
 
@@ -135,9 +135,11 @@ Thousands of people have found their life partners through trusted matchmaking.
 Your story could be next.
 </p>
 
+<Link to="/signup">
 <button className="mt-6 bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg">
 Join Vivah E-Connect
 </button>
+</Link>
 </div>
 
 </div>
@@ -147,13 +149,10 @@ Join Vivah E-Connect
 {/* CTA */}
 
 <section className="bg-pink-600 text-white py-20 text-center">
-<h2 className="text-3xl font-semibold">
+<h2 className="text-3xl font-semibold mb-5">
 Your Perfect Match Could Be One Click Away
 </h2>
-
-<button className="mt-8 bg-white text-pink-600 px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-Create Your Profile
-</button>
+<Link to="/signup" className=" bg-white text-pink-600 px-6 py-3 rounded-lg hover:bg-gray-100 transition" >Create Your Profile</Link>
 </section>
 
 </div>

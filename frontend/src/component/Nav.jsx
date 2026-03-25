@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import  {NavLink}  from "react-router-dom";
 export default function Navbar(){
 const {user,logout} =useAuth();
  const navigate = useNavigate();
@@ -10,26 +10,32 @@ const {user,logout} =useAuth();
     navigate("/login");
   };
   
-  const style=" hover:text-blue-500 hover:text-lg";
-
+  // const style = ({ isActive }) =>
+  // `hover:text-blue-500 ${
+  //   isActive ? "text-blue-600 font-semibold" : ""
+  // }`;
+  const style = ({ isActive }) =>
+  `transition-all duration-100 hover:text-teal-300 ${
+    isActive ? "text-teal-300 font-semibold border-b-2 border-teal-400" : ""
+  }`;
   return (
      
-    <div >
-      <div className="   text-white bg-pink-700 flex justify-start gap-6 p-2"  
-      >
+    <div className="sticky top-0 z-50 " >
+      <div className="  text-white bg-pink-700 flex justify-start gap-6 p-2 " > 
+    
        
       
         {!user  ?  ( 
         <>   
-        <a href="/"className={style}> 
+        <NavLink to="/"className={style}> 
           Home
-        </a>
-          <a href="/signup" className={style}> 
+        </NavLink>
+          <NavLink to="/signup" className={style}> 
           Signup
-        </a>
-        <a href="/login" className={style}> 
+        </NavLink>
+        <NavLink to="/login" className={style}> 
           Login
-        </a>
+        </NavLink>
          
        </> 
 
@@ -37,32 +43,31 @@ const {user,logout} =useAuth();
        
         (
           <>
-            <a href="/dashboard"className={style}> 
+            <NavLink to="/dashboard"className={style}> 
           Dashboard
-        </a>
-        <a href="/profiles"className={style}> 
+        </NavLink>
+        <NavLink to="/profiles"className={style}> 
           Profiles
-        </a>
-        <a href="/register" className={style}> 
+        </NavLink>
+        <NavLink to="/register" className={style}> 
           Register
-        </a>
-        <a href="/connections" className={style}> 
+        </NavLink>
+        <NavLink to="/connections" className={style}> 
           Connections
-        </a>
-        <a href="/chat" className={style}> 
+        </NavLink>
+        <NavLink to="/chat" className={style}> 
         Chat
-        </a>
+        </NavLink>
             
           <button
           
             onClick={handleLogout}
-           className={style}
-          >
+           className="hover:text-teal-300"    >
             Logout
           </button>
-        <a href="/Account" className="hover:text-blue-500 hover:text-lg " > 
+        <NavLink to="/Account" className={style} > 
           MyAccount
-        </a>
+        </NavLink>
 
       
         

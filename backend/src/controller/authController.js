@@ -3,36 +3,39 @@ import Profile from '../models/Profile.js';
 import  { body, validationResult, check } from  "express-validator"
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
+import rateLimit from "express-rate-limit";
 
 
 
-const signup = async (req,res)=>{
-  
-   
+const signup = async (req,res)=>{   
   try {
    
-    const {
-        Name,
-        City,
-        Email,
-        Password,
-        Contact,
-      }= req.body;
+      const { name, city, email, password, contact } = req.body;
 
-         const hashedPassword = await bcrypt.hash(Password, 12);
-      const user = new User({
-        Name,
-        City,
-        Email,
-        Password: hashedPassword,
-        Contact,
+       // ✅ check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+      errors: [{msg:"Email already registered"}],
       });
+    }
+         const hashedPassword = await bcrypt.hash(password, 12);
+      
+       const user = new User({
+      name,
+      city,
+      email,
+      password: hashedPassword,
+      contact,
+    });
       const savedUser = await user.save();
       console.log(savedUser);
    console.log("saved User successfully");
-    res.status(201).json(savedUser);
+    res.status(201).json({
+      success: true,
+    });
          
-          // res.redirect("/login");
     } catch(err){
        console.log(err);
       return res.status(500).json({ message: err.message });
@@ -40,28 +43,40 @@ const signup = async (req,res)=>{
 }
 
 
+// export const loginLimiter = rateLimit({
+//   windowMs: 30 * 60 * 1000, // 15 min
+//   max: 5, // max 5 attempts
+//  errors: [{msg:"Invalid email or password"}],
+  //  // message: "Too many login attempts, try again later"
+// });
+
 const login= async(req,res,next)=>{
   try{
-    const {Email, Password}=req.body;
+    const {email, password}=req.body;
    
-
-const user = await User.findOne({ Email });
+console.log(email,password);
+const user = await User.findOne({ email });
 if (!user ) {
-  return res.status(401).json({
+  console.log("not found");
+  return res.status(400).json({
     success: false,
-    message: "Invalid email or password",
+      errors: [{msg:"Invalid email or password"}],
   });
 }
 
+ const isMatch= await  bcrypt.compare(password,user.password);
+console.log(isMatch);
+if(!isMatch){
+  console.log("wrong password");
+    return res.status(401).json({
+    success: false,
+    errors: [{msg:"Invalid email or password"}],
+  });
+}
+console.log(user);
 
-//   req.session.isLoggedIn = true;
-//   req.session.user = user;
-//   await req.session.save();
-  console.log(user.Name,"is logged In");
-//   res.redirect("/");
-// };
-
-
+  console.log(user.name,"is logged In");
+  
 
 // jwt.sign() → create token
 // jwt.verify() → verify token
@@ -78,15 +93,9 @@ const accessToken = jwt.sign(
   { expiresIn: "1d" }
 );
 
-// res.status(200).json({
-//   message: "Login successful",
-//   success: true,
-//   token: accessToken
-// });
-
 res.cookie("token", accessToken, {
     httpOnly: true,
-    secure: false, // true in production (HTTPS)
+    secure: process.env.NODE_ENV === "production", // false, true in production (HTTPS)
     sameSite: "strict",
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   })
@@ -158,108 +167,4 @@ s1: ON post signup convert password to hash and then store it to db using bcrypt
 
 s2: while post Login check
 
-
 */
-
-
-
-
-
-// const { body, validationResult, check } = require("express-validator");
-// const User = require("../models/user");
-
-// const bcrypt = require("bcryptjs");
-// const user = require("../models/user");
-
-
-// exports.postSignup =
-//  [
-//   // Validation middleware
-//   check("email").isEmail().withMessage("Please enter a valid email address."),
-
-//   check("password")
-//     .isLength({ min: 6 })
-//     .withMessage("Password must be at least 6 characters long."),
-
-//   // Controller logic
-//   (req, res, next) => {
-//     const { firstName, lastName, city, email, password, userType } = req.body;
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(422).render("auth/signup", {
-//         isLoggedIn: false,
-//         errors: errors.array(),
-//         oldInput: { firstName, lastName, email, password, userType },
-//         user: {},
-//       });
-//     }
-
-//     bcrypt.hash(password, 12).then((hashedPassword) => {
-//       const user = new User({
-//         firstName,
-//         lastName,
-//         city,
-//         email,
-//         password: hashedPassword,
-//         userType,
-//       });
-//       // console.log(user);
-//       user
-//         .save()
-//         .then(() => {
-//           console.log("saved successfully");
-//           res.redirect("/login");
-//         })
-//         .catch((err) => {
-//           return res.status(422).render("auth/signup", {
-//             isLoggedIn: false,
-//             errors: [err.message],
-
-//             oldInput: { firstName, lastName, email, userType },
-//             user: {},
-//           });
-//         });
-//     });
-//   },
-// ];
-
-// exports.postLogin = async (req, res, next) => {
-//   // console.log(req.body);
-//   const { email, password } = req.body;
-//   const user = await User.findOne({ email });
-//   console.log(user);
-
-//   if (!user) {
-//     return res.status(422).render("auth/login", {
-//       isLoggedIn: false,
-//       errors: ["User does not exist"],
-//       // oldInput: {email}
-//     });
-//   }
-
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) {
-//     return res.status(422).render("auth/login", {
-//       isLoggedIn: false,
-//       errors: ["Invalid password"],
-//       // oldInput:{email}
-//     });
-//   }
-//   console.log(user);
-
-//   req.session.isLoggedIn = true;
-//   req.session.user = user;
-//   await req.session.save();
-//   console.log(user);
-//   res.redirect("/");
-// };
-// exports.postLogout = (req, res, next) => {
-//   req.session.destroy(() => {
-//     res.redirect("/login");
-//   });
-// };
-
-// exports.postProfile = (req, res) => {
-//   const user = req.session.user;
-//   res.render("auth/profile", { isLoggedIn: req.isLoggedIn, user: user });
-// };

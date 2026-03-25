@@ -1,5 +1,6 @@
 // import { createContext } from "react";
 // export const AuthContext = createContext();
+import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   loginUser,
@@ -45,11 +46,14 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await logoutUser();
     setUser(null);
+     setProfiles([]);
   };
+ const isAuthenticated = !!user;
+ console.log(isAuthenticated);
 
   return (
     <AuthContext.Provider
-      value={{ user, profiles,signup, login, logout, loading }}
+      value={{ user, profiles,signup, login, logout, loading ,isAuthenticated}}
     >
       {children}
     </AuthContext.Provider>

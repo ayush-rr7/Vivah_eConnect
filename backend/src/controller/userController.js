@@ -117,13 +117,4 @@ export default {
  
 };
 
-// let imageURLs = [];
-//     if (req.file) {
-//       // single image
-//       imageURLs.push(req.file.path);
-//     } else if (req.files && req.files.length > 0) {
-//       // multiple images
-//       imageURLs = req.files.map(file => file.path);
-//     } else {
-//       return res.status(422).json({ message: "Image(s) required" });
-//     }
+

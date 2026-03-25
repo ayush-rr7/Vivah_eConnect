@@ -9,13 +9,14 @@ function Register() {
  const navigate = useNavigate();
 //  console.log(signup);
   // const api ="http://localhost:3002/auth/signup";
+  const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
-    Name:"",
-    City:"",
-    Email:"",
-    Contact:"",
-    Password:"",
-    Gender: ""
+    name:"",
+    city:"",
+    email:"",
+    contact:"",
+    password:"",
+    gender: ""
   });
 
   
@@ -26,37 +27,20 @@ function Register() {
 
    const addUser = async (e) => {
     e.preventDefault();
-
-    await signup(formData);
-
+try{
+   const res= await signup(formData);
+// console.log(res);
     navigate("/login"); // already logged in
-  };
+  } 
+  catch (err){
+     if (err.response && err.response.data.errors) {
+    setErrors(err.response.data.errors);
+  }
+    // console.log("J");
+    //   console.log(err.response.data.errors);
+    }
+   }
   
-  // const  addUser = async (e)=>{
-  //   e.preventDefault();
-
-//     try{
-//       const res= await axios.post(api,formData);
-//       alert(`User ${res.data.name} registered successfully`);
-//       if (res.status === 201) {
-//   setFormData({
-//     Name: "",
-//     City:"",
-//     Email: "",
-//     Contact:"",
-//     Password: "",
-//     Gender: ""
-//   });
-// }
-
-//     }
-//     catch (err){
-//       console.log(err.message);
-//     }
-
-
-//     console.log(formData);
-//   }
   const  style="border p-2 w-full mb-3 rounded hover:scale-102 ";
   const styleBtn="bg-red-600 text-white rounded w-1/2  p-2 hover:scale-102"
 
@@ -70,26 +54,33 @@ function Register() {
        <h1 className="text-2xl flex justify-center">Matrimonial Site</h1>
       </div>
        <div className="flex justify-center">
+        
       <div className="h-min w-lg my-10 p-4 flex justify-center shadow-xl">
+        
+          {errors.map((err, index) => (
+            <ul key={index} className="text-red-600 flex flex-col">
+            <li> {err.msg}</li>
+            </ul>
+          ))}
         <form onSubmit={addUser}>
          
-          <input type="text" name ="Name"  placeholder=" full Name" value={formData.Name} onChange= {handleChange} required   className={style}/> <br/>
+          <input type="text" name ="name"  placeholder=" full name" value={formData.name} onChange= {handleChange} required   className={style}/> <br/>
 
-          <input type="text" name ="City"  placeholder=" City" value={formData.City} onChange= {handleChange} required   className={style}/> <br/>
+          <input type="text" name ="city"  placeholder=" city" value={formData.city} onChange= {handleChange} required   className={style}/> <br/>
 
-          <input type="email" name ="Email"  placeholder=" Email" value={formData.Email} onChange= {handleChange} required   className={style}/> <br/>
+          <input type="email" name ="email"  placeholder=" email" value={formData.email} onChange= {handleChange} required   className={style}/> <br/>
 
-          <input type="number" name ="Contact"  placeholder=" Contact No" value={formData.Contact} onChange= {handleChange} required   className={style}/> <br/>
-          <input type="password" name ="Password"  placeholder=" Password" value={formData.Password} onChange= {handleChange} required   className={style}/> <br/>
+          <input type="number" name ="contact"  placeholder=" contact No" value={formData.contact} onChange= {handleChange} required   className={style}/> <br/>
+          <input type="password" name ="password"  placeholder=" password" value={formData.password} onChange= {handleChange} required   className={style}/> <br/>
          
          <div>
-          <p>Gender </p>
+          <p>gender </p>
           <label>
-            <input type="radio"  name="Gender" value="Male" checked={formData.Gender==="Male"} onChange={handleChange}  />
+            <input type="radio"  name="gender" value="Male" checked={formData.gender==="Male"} onChange={handleChange}  />
            Male </label>
 
            <label>
-            <input type="radio"  name="Gender" value="Female" checked={formData.Gender==='Female'} onChange={handleChange}/>
+            <input type="radio"  name="gender" value="Female" checked={formData.gender==='Female'} onChange={handleChange}/>
            Female </label>
            </div>
           

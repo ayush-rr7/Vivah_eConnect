@@ -4,7 +4,7 @@ function Footer() {
   const headingStyle = "text-white font-semibold mb-3";
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-0.5">
+    <footer className="bg-gray-900 min-w-full  text-gray-300 mt-0.5 ">
 
       <div className="max-w-7xl mx-auto px-6 py-5 grid md:grid-cols-4 gap-8">
 
