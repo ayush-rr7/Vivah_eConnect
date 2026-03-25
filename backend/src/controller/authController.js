@@ -52,9 +52,7 @@ const signup = async (req,res)=>{
 
 const login= async(req,res,next)=>{
   try{
-    const {email, password}=req.body;
-   
-console.log(email,password);
+const {email, password}=req.body;
 const user = await User.findOne({ email });
 if (!user ) {
   console.log("not found");
@@ -65,7 +63,6 @@ if (!user ) {
 }
 
  const isMatch= await  bcrypt.compare(password,user.password);
-console.log(isMatch);
 if(!isMatch){
   console.log("wrong password");
     return res.status(401).json({
@@ -73,17 +70,8 @@ if(!isMatch){
     errors: [{msg:"Invalid email or password"}],
   });
 }
-console.log(user);
-
   console.log(user.name,"is logged In");
   
-
-// jwt.sign() → create token
-// jwt.verify() → verify token
-// jwt.decode() → read token payload
-// TokenExpiredError → handle expiry
-// JsonWebTokenError → handle invalid token
-
 
 //Sign token
 const accessToken = jwt.sign(
@@ -105,7 +93,7 @@ res.cookie("token", accessToken, {
     success: true
   });
 // return jwt.verify(token,process.env.JWT_SECRET);
-console.log("DONE");
+// console.log("DONE");
   }
   catch(err){
     console.log(err);
@@ -117,7 +105,7 @@ console.log("DONE");
 
 const account= async(req,res,next)=>{
    try {
-    console.log(req.userId);
+    console.log("fetching user detail");
     const user = await User.findById(req.userId).select("-Password");
 
     if (!user) {
@@ -144,7 +132,7 @@ const account= async(req,res,next)=>{
 }
 
 const logout= async(req,res,next)=>{
-  console.log("I'm here");
+  console.log("User Logging Out");
   try{
     res
   .clearCookie("token")
