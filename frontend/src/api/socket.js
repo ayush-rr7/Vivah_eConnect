@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { getActiveProfileId } from "../utils/getActiveProfile";
-export const socket = io("http://localhost:3002", {
+const API= import.meta.env.VITE_API_URL
+export const socket = io(API, {
     auth: {
     profileId: getActiveProfileId()
   },
