@@ -7,6 +7,10 @@ const userRouter = express.Router();
 
 
 userRouter.post('/user',upload.array("imageURL", 5),userController.addUser);
+
+userRouter.get('/pref/:profileId',userController.getPreferences);
+userRouter.put('/pref/:profileId',userController.savePreferences);
+
 userRouter.get('/user1',userController.getUser);
 userRouter.get('/user1/:id',userController.getUserById);
 userRouter.delete('/user/:id',userController.deleteUser);

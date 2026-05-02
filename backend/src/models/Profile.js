@@ -67,6 +67,11 @@
     ref: "User",
     required: true,
   },
+//   partnerPreferenceId: {
+//   type: mongoose.Schema.Types.ObjectId,
+//   ref: "PartnerPreferences",
+//   default: null,
+// },
     });
     
     

@@ -4,15 +4,129 @@ import  { body, validationResult, check } from  "express-validator"
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
+import Otp from "../models/Otp.js";
+import { sendEmail } from '../config/sendEmail.js';
+
+const sendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    await Otp.deleteMany({ email });
+
+    //delete old otp
+    await Otp.deleteMany({ email });
+    // save new OTP
+    const newOtp = new Otp({
+      email,
+      otp,
+      expiresAt,
+    }); 
+    
+    await newOtp.save();
+   
+    //  EMAIL TEMPLATE
+    const subject = "Your OTP for Vivah E-Connect";
+    const html = `
+      <h2>Email Verification</h2>
+      <p>Your OTP is:</p>
+      <h1>${otp}</h1>
+      <p>This OTP will expire in 5 minutes.</p>
+    `;
+
+    await sendEmail(
+      { to:email,
+         subject, 
+         html
+      });
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to email",
+    });
+    
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+console.log( email, otp);
+    const record = await Otp.findOne({ email });
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP not found",
+      });
+    }
+
+    if (record.otp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    if (record.expiresAt < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired",
+      });
+    }
+    // delete OTP after success
+    await Otp.deleteMany({ email });
+
+    // create verification token
+    const token = jwt.sign(
+      { email },
+      process.env.JWT_SECRET,
+      { expiresIn: "10m" }
+    );
+
+    return res.status(200).json({
+      success: true,
+      token,
+    });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
 
 
-
+//SIGNUP
 const signup = async (req,res)=>{   
   try {
    
-      const { name, city, email, password, contact } = req.body;
+      const { name, city, email, password, contact, token } = req.body;
 
-       // ✅ check if user already exists
+    //verify token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({
+        success: false,
+        errors: [{ msg: "Invalid or expired verification" }],
+      });
+    }
+
+    // check email match
+    if (decoded.email !== email) {
+      return res.status(401).json({
+        success: false,
+        errors: [{ msg: "Email mismatch" }],
+      });
+    }
+
+       //  check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -80,11 +194,13 @@ const accessToken = jwt.sign(
   process.env.JWT_SECRET,
   { expiresIn: "1d" }
 );
+// console.log(accessToken);
 
+const isProduction = process.env.NODE_ENV === "production";
 res.cookie("token", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // false, true in production (HTTPS)
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   })
   .status(200)
@@ -93,7 +209,7 @@ res.cookie("token", accessToken, {
     success: true
   });
 // return jwt.verify(token,process.env.JWT_SECRET);
-// console.log("DONE");
+console.log("DONE");
   }
   catch(err){
     console.log(err);
@@ -147,7 +263,7 @@ const logout= async(req,res,next)=>{
 }
 
 
-export default {signup,login,logout,account};  // using signup without braces need to import one by one in router
+export default {sendOtp,verifyOtp,signup,login,logout,account,};  // using signup without braces need to import one by one in router
 
 /*Plans for authentication
 

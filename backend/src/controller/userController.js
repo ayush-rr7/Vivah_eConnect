@@ -1,5 +1,6 @@
 import Profile from "../models/Profile.js";
 import Connection from "../models/Connection.js";
+import PartnerPreference from "../models/partnerPreference.js";
 
 const addUser = async (req, res) => {
   try {
@@ -23,7 +24,7 @@ const addUser = async (req, res) => {
 
     const userId = req.userId;
 
-    // 👇 MULTIPLE IMAGE HANDLING
+    //  MULTIPLE IMAGE HANDLING
     if (!req.files || req.files.length === 0) {
       console.log("err");
       return res.status(422).json({ message: "Images required" });
@@ -53,10 +54,89 @@ const addUser = async (req, res) => {
     const savedUser = await newUser.save();
     console.log("saved");
 
-    res.status(201).json(savedUser); // 👈 send back to frontend
+    res.status(201).json(savedUser); //  send back to frontend
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });
+  }
+};
+
+
+const getPreferences = async (req, res) => {
+  try {
+    const { profileId } = req.params;
+    console.log(profileId);
+    const preferences = await PartnerPreference.findOne({ profileId });
+
+    return res.json({ preferences });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const savePreferences = async (req, res) => {
+  try {
+    const { profileId } = req.params;
+
+    const {
+      ageMin,
+      ageMax,
+      incomeMin,
+      incomeMax,
+      heightMin,
+      heightMax,
+      religion,
+      caste,
+      education,
+      location,
+      maritalStatus,
+    } = req.body;
+
+    
+    const profile = await Profile.findById(profileId);
+
+    if (!profile) {
+      return res.status(404).json({
+        message: "Profile not found",
+      });
+    }
+
+   
+    const savedPreference = await PartnerPreference.findOneAndUpdate(
+      { profileId: profile._id },
+      {
+        ageMin,
+        ageMax,
+        incomeMin,
+        incomeMax,
+        heightMin,
+        heightMax,
+        religion,
+        caste,
+        education,
+        location,
+        maritalStatus,
+      },
+      {
+        new: true,
+        upsert: true, 
+      }
+    );
+
+    console.log(savedPreference);
+
+    res.status(200).json({
+      message: "Partner Preferences saved successfully",
+      preferences: savedPreference,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message,
+    });
   }
 };
 
@@ -114,6 +194,8 @@ export default {
   getUserById,
   deleteUser,
   updateUser,
+  savePreferences,
+  getPreferences
  
 };
 

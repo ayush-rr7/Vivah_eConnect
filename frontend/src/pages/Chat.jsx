@@ -1,137 +1,196 @@
-
 import { useEffect, useState } from "react";
 import { socket } from "../api/socket";
-import { useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
+import { useParams, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api from "../api/axios"
-import { getActiveProfileId } from "../utils/getActiveProfile";
-function Chat() {
+import api from "../api/axios";
 
-  const { user, loading } = useAuth();
+function Chat() {
+  const { user, loading, activeProfileId: senderProfileId } = useAuth();
+
+  
   const { id: receiverProfileId } = useParams();
-  const senderProfileId=getActiveProfileId();
+console.log(senderProfileId,receiverProfileId);
+  
   const location = useLocation();
- const profile = location.state?.profile;
- console.log(profile);
+  const profile = location.state?.profile;
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  /* ✅ SAFE ROOM ID */
+  
   const roomId =
-    user && receiverProfileId
+    senderProfileId && receiverProfileId
       ? [senderProfileId, receiverProfileId].sort().join("_")
       : null;
 
-  
-useEffect(() => {
-  if (!user || !receiverProfileId) return;
+  /* ---------------- FETCH + SOCKET ---------------- */
+  useEffect(() => {
+    if (!user || !senderProfileId || !receiverProfileId) return;
 
-  // 1️⃣ fetch old messages
-  const fetchMessages = async () => {
-    try {
-      console.log(receiverProfileId, 
-      senderProfileId
-    );
-    
-   const res = await api.get("messages/now",{
-     params: {
-      receiverProfileId, 
-      senderProfileId
-    
-    }})
-      setMessages(res.data);
-      console.log(res.data); // must be array
-    } catch (err) {
-      console.log("Failed to fetch chat history:", err);
+    // Fetch old messages
+    const fetchMessages = async () => {
+      try {
+        const res = await api.get("/messages/now", {
+          params: {
+            senderProfileId,
+            receiverProfileId,
+          },
+        });
+
+        setMessages(res.data || []);
+      } catch (err) {
+        console.log("Failed to fetch messages:", err);
+      }
+    };
+
+    fetchMessages();
+
+    socket.auth = {
+     profileId: senderProfileId
+    };
+    //  Connect socket if not connected
+    if (!socket.connected) {
+      socket.connect();
     }
-  };
 
-  fetchMessages();
+    // Real-time incoming messages
+    const receiveHandler = (msg) => {
+      setMessages((prev) => {
+        
+        const alreadyExists = prev.some(
+          (m) => m._id && msg._id && m._id === msg._id
+        );
 
-  // 2️⃣ connect socket
-  if (!socket.connected) socket.connect();
+        if (alreadyExists) return prev;
 
-  // 3️⃣ receive real-time messages
-  const receiveHandler = (msg) => {
-    setMessages(prev => [...prev, msg]);
-  };
-  socket.on("receive_message", receiveHandler);
+        return [...prev, msg];
+      });
+    };
 
-  // 4️⃣ offline messages
-  const offlineHandler = (msgs) => {
-    setMessages(prev => {
-      const existingIds = new Set(prev.map(m => m._id));
-      const newMsgs = msgs.filter(m => !existingIds.has(m._id));
-      return [...prev, ...newMsgs];
-    });
-  };
-  socket.on("offline_messages", offlineHandler);
+    socket.on("receive_message", receiveHandler);
 
-  return () => {
-    socket.off("receive_message", receiveHandler);
-    socket.off("offline_messages", offlineHandler);
-  };
+    //Offline messages (if any)
+    const offlineHandler = (msgs) => {
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m._id));
 
-}, [receiverProfileId, user]);
+        const newMsgs = msgs.filter(
+          (m) => !m._id || !existingIds.has(m._id)
+        );
 
-  /* ---------- SEND MESSAGE ---------- */
+        return [...prev, ...newMsgs];
+      });
+    };
+
+    socket.on("offline_messages", offlineHandler);
+
+    // cleanup
+    return () => {
+      socket.off("receive_message", receiveHandler);
+      socket.off("offline_messages", offlineHandler);
+    };
+  }, [user, senderProfileId, receiverProfileId]);
+
+  /* ---------------- SEND MESSAGE ---------------- */
   const sendMessage = () => {
-
     if (!message.trim() || !roomId) return;
 
-    socket.emit("send_message", {
+    const newMessage = {
       roomId,
+      senderProfileId,
       receiverProfileId,
-      message
-    });
+      message: message.trim(),
+    };
 
-    setMessages(prev => [
+    // emit to backend
+    socket.emit("send_message", newMessage);
+
+    // instant frontend update
+    setMessages((prev) => [
       ...prev,
       {
-        senderId: senderProfileId,
-        message
-      }
+        // senderId: senderProfileId,
+        senderProfileId,
+        message: message.trim(),
+      },
     ]);
 
     setMessage("");
   };
 
-
-
-  /* ---------- AUTH GUARD ---------- */
+  /* ---------------- AUTH GUARD ---------------- */
   if (loading) return <p>Loading account...</p>;
-  if (!user) return <p>Please login</p>;
-
-
+  if (!user) return <p>Please login first</p>;
 
   return (
-    <div className="p-4 m-5 border rounded">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 flex justify-center p-4">
+      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-md flex flex-col h-[80vh]">
+        {/* Header */}
+        <div className="p-4 border-b flex justify-between items-center">
+          <h1 className="text-lg font-semibold text-gray-800">
+            {profile?.name || "Chat"}
+          </h1>
 
-      <h1>Welcome {user.Name}</h1>
-      {/* <h2>Chat with {receiverProfileId}</h2> */}
-      <h2>Chat with {profile?.name}</h2>
+          <span className="text-sm text-gray-500">
+            Profile Chat
+          </span>
+        </div>
 
-      <div>
-        {messages.map((msg, i) => (
-          <p key={i}>
-            <b>{msg.senderId}</b>: {msg.message}
-          </p>
-        ))}
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {messages.map((msg, i) => {
+            /*
+              IMPORTANT:
+              compare with senderProfileId
+              not user._id
+            */
+           const isMe =
+            msg.senderProfileId?.toString() === senderProfileId?.toString();
+           
+            return (
+              <div
+                key={msg._id || i}
+                className={`flex ${
+                  isMe ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${
+                    isMe
+                      ? "bg-pink-500 text-white rounded-br-none"
+                      : "bg-gray-200 text-gray-800 rounded-bl-none"
+                  }`}
+                >
+                  {msg.message}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Input */}
+        <div className="p-4 border-t flex gap-2">
+          <input
+            type="text"
+            value={message}
+            placeholder="Type a message..."
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+          />
+
+          <button
+            onClick={sendMessage}
+            className="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-lg transition"
+          >
+            Send
+          </button>
+        </div>
       </div>
-
-      <input
-        value={message}
-        placeholder="Enter Message"
-        onChange={(e)=>setMessage(e.target.value)}
-      />
-
-      <button onClick={sendMessage}>
-        Send
-      </button>
-
     </div>
   );
 }
@@ -140,86 +199,3 @@ export default Chat;
 
 
 
-
-
-
-// import { useEffect, useState } from "react";
-// import { socket } from "../api/socket";
-// import { useParams } from "react-router-dom";
-
-// function Chat() {
-
-//   const { id } = useParams(); // receiver
-//   const receiverProfileId = id;
-// console.log(receiverProfileId);
-//   const [message, setMessage] = useState("");
-//   const [messages, setMessages] = useState([]);
-
-//   /* listen incoming messages */
-//   useEffect(() => {
-//   socket.connect();
-//   console.log("Trying socket connect");
-
-//     const receiveHandler = (data) => {
-//       setMessages(prev => [...prev, data]);
-//     };
-
-//     socket.on("receive_message", receiveHandler);
-
-//     return () => {
-//       socket.off("receive_message", receiveHandler);
-//     };
-
-//   }, []);
-
-//   /* send message */
-//   const sendMessage = () => {
-
-//     if (!message.trim()) return;
-
-//     socket.emit("send_message", {
-//       receiverProfileId,
-//       message
-//     });
-
-//     // optimistic UI update
-//     setMessages(prev => [
-//       ...prev,
-//       {
-//         senderId: "me",
-//         message
-//       }
-//     ]);
-
-//     setMessage("");
-//   };
-
-//   return (
-//     <div className="p-4 m-5 border rounded">
-
-//       <h2>Chat with {receiverProfileId}</h2>
-
-//       <div>
-//         {messages.map((msg, i) => (
-//           <p key={i}>
-//             <b>{msg.senderId}</b>: {msg.message}
-//           </p>
-//         ))}
-//       </div>
-
-//       <input
-//         value={message}
-//         placeholder="Enter Message"
-//         className="border p-2  mb-3 rounded hover:scale-102"
-//         onChange={(e)=>setMessage(e.target.value)}
-//       />
-
-//       <button onClick={sendMessage}>
-//         Send
-//       </button>
-
-//     </div>
-//   );
-// }
-
-// export default Chat;

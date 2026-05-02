@@ -29,11 +29,35 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchUser();
   }, []);
 
+//-----active profile-------
+  const [activeProfileId, setActiveProfileId] = useState(() => {
+  return localStorage.getItem("activeProfileId") || null;
+});
+
+// persist automatically
+useEffect(() => {
+  if (activeProfileId) {
+    localStorage.setItem("activeProfileId", activeProfileId);
+    
+  }
+}, [activeProfileId]);
+
+
+
+// set default only when profiles load AND nothing selected
+useEffect(() => {
+  if (!activeProfileId && profiles?.length > 0) {
+    setActiveProfileId(profiles[0]._id);
+  }
+}, [profiles, activeProfileId]);
+
+
+
+//auth services
   const login = async (data) => {
     await loginUser(data);
     await fetchUser();
@@ -53,7 +77,8 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, profiles,signup, login, logout, loading ,isAuthenticated}}
+      value={{ user, profiles,signup, login, logout, loading ,isAuthenticated,activeProfileId,
+    setActiveProfileId,}}
     >
       {children}
     </AuthContext.Provider>

@@ -33,65 +33,78 @@ function Login() {
     }
   };
 
-  const style = "border p-2 w-full mb-3 rounded hover:scale-102 ";
-  const styleBtn = "bg-red-600 text-white rounded w-1/2  p-2 hover:scale-102";
+return (
+  <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center px-4">
 
-  return (
-    <>
-      {/* <div className=" min-h-screen"> */}
-      <div className="   ">
-        <h1 className="text-2xl flex justify-center">Matrimonial Site</h1>
-      </div>
+    {/* Auth Card */}
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-6">
 
-      <div className="flex justify-center">
-       
-        <div className="h-min w-lg my-10 p-4 flex justify-center shadow-xl">
-          <div>
-             {errors.map((err, index) => (
-          <ul key={index} className="text-red-600 flex flex-col">
-            <li> {err.msg}</li>
-          </ul>
-        ))}
-            <form onSubmit={handleSubmit}>
-              <input
-                type="email"
-                name="email"
-                placeholder=" Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className={style}
-              />{" "}
-              <br />
-              {/* <input type="number" name ="Contact"  placeholder=" Contact No" value={formData.Contact} onChange= {handleChange} required   className={style}/> <br/> */}
-              <input
-                type="password"
-                name="password"
-                placeholder=" Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className={style}
-              />{" "}
-              <br />
-              <div className="flex justify-center">
-                <button type="submit" className={styleBtn}>
-                  {" "}
-                  Submit
-                </button>
-              </div>
-            </form>
-            <Link
-              to="/signup"
-              className="text-blue-600 hover:text-blue-800 p-2  "
-            >
-              New user? SignUP here
-            </Link>
-          </div>
+      {/* Title */}
+      <h1 className="text-2xl font-semibold text-center text-gray-800 mb-2">
+        Vivah e-Connect
+      </h1>
+
+      <p className="text-center text-sm text-gray-500 mb-6">
+        Login to continue your journey
+      </p>
+
+      {/* Error Messages */}
+      {errors.length > 0 && (
+        <div className="mb-4">
+          {errors.map((err, index) => (
+            <p key={index} className="text-red-600 text-sm">
+              {err.msg}
+            </p>
+          ))}
         </div>
-      </div>
-    </>
-  );
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+        >
+          Login
+        </button>
+      </form>
+
+      {/* Footer */}
+      <p className="text-center text-sm text-gray-500 mt-6">
+        New user?{" "}
+        <Link
+          to="/signup"
+          className="text-pink-600 hover:underline"
+        >
+          Create an account
+        </Link>
+      </p>
+
+    </div>
+  </div>
+);
+  
 }
 
 export default Login;
