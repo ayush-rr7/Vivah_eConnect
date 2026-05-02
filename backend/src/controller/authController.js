@@ -9,18 +9,21 @@ import { sendEmail } from '../config/sendEmail.js';
 
 const sendOtp = async (req, res) => {
   try {
-    const email = req.body.email?.trim().toLowerCase();
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
-    }
-
+    const { email } = req.body;
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-   
+    await Otp.deleteMany({ email });
+
+    // save new OTP
+    const newOtp = new Otp({
+      email,
+      otp,
+      expiresAt,
+    }); 
+    
+    await newOtp.save();
+console.log("processing otp send");
     //  EMAIL TEMPLATE
     const subject = "Your OTP for Vivah E-Connect";
     const html = `
@@ -29,24 +32,16 @@ const sendOtp = async (req, res) => {
       <h1>${otp}</h1>
       <p>This OTP will expire in 5 minutes.</p>
     `;
+    let emailSent = true;
 
-    await sendEmail(
-      { to:email,
-         subject, 
-         html
-      });
-
-    //delete old otp
-    await Otp.deleteMany({ email });
-    // save new OTP only after email was accepted
-    const newOtp = new Otp({
-      email,
-      otp,
-      expiresAt,
-    }); 
-    
-    await newOtp.save();
-
+  try {
+  await sendEmail({ to: email, subject, html });
+  } catch (emailErr) {
+  console.log("Email failed:", emailErr.message);
+  emailSent = false;
+  }
+    console.log("otp sent"); 
+   
     return res.status(200).json({
       success: true,
       message: "OTP sent to email",
@@ -61,8 +56,8 @@ const sendOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const email = req.body.email?.trim().toLowerCase();
-    const otp = req.body.otp?.trim();
+    const { email, otp } = req.body;
+console.log( email, otp);
     const record = await Otp.findOne({ email });
 
     if (!record) {
@@ -111,8 +106,7 @@ const verifyOtp = async (req, res) => {
 const signup = async (req,res)=>{   
   try {
    
-      const { name, city, password, contact, token } = req.body;
-      const email = req.body.email?.trim().toLowerCase();
+      const { name, city, email, password, contact, token } = req.body;
 
     //verify token
     let decoded;
