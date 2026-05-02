@@ -9,22 +9,17 @@ import { sendEmail } from '../config/sendEmail.js';
 
 const sendOtp = async (req, res) => {
   try {
-    const { email } = req.body;
+    const email = req.body.email?.trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-    await Otp.deleteMany({ email });
-
-    //delete old otp
-    await Otp.deleteMany({ email });
-    // save new OTP
-    const newOtp = new Otp({
-      email,
-      otp,
-      expiresAt,
-    }); 
-    
-    await newOtp.save();
    
     //  EMAIL TEMPLATE
     const subject = "Your OTP for Vivah E-Connect";
@@ -41,6 +36,17 @@ const sendOtp = async (req, res) => {
          html
       });
 
+    //delete old otp
+    await Otp.deleteMany({ email });
+    // save new OTP only after email was accepted
+    const newOtp = new Otp({
+      email,
+      otp,
+      expiresAt,
+    }); 
+    
+    await newOtp.save();
+
     return res.status(200).json({
       success: true,
       message: "OTP sent to email",
@@ -55,8 +61,8 @@ const sendOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { email, otp } = req.body;
-console.log( email, otp);
+    const email = req.body.email?.trim().toLowerCase();
+    const otp = req.body.otp?.trim();
     const record = await Otp.findOne({ email });
 
     if (!record) {
@@ -105,7 +111,8 @@ console.log( email, otp);
 const signup = async (req,res)=>{   
   try {
    
-      const { name, city, email, password, contact, token } = req.body;
+      const { name, city, password, contact, token } = req.body;
+      const email = req.body.email?.trim().toLowerCase();
 
     //verify token
     let decoded;

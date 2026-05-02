@@ -1,17 +1,6 @@
 const MatchCard = ({ data }) => {
   return (
-    // <div className="border rounded p-3 shadow">
-    //   <div className="h-32 bg-gray-200 mb-2"></div>
-
-    //   <h3>{data.name}, {data.age}</h3>
-    //   <p>{data.location}</p>
-
-    //   <p className="text-red-500 font-bold">
-    //     ❤️ {data.compatibility}%
-    //   </p>
-
-    //   <button className="mt-2 text-blue-500">View Profile</button>
-    // </div>
+   
 
               <a href={`/profile/${data._id}`}>
 
@@ -24,7 +13,7 @@ const MatchCard = ({ data }) => {
                   />
 
                   {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                   {/* Name + Age on image */}
                   <div className="absolute bottom-2 left-3 text-white">

@@ -4,20 +4,27 @@ import nodemailer from "nodemailer";
 
 export  const sendEmail = async ({ to, subject, html }) => {
   try {
+    const user = process.env.SMTP_EMAIL;
+    const pass = process.env.SMTP_PASSWORD?.replace(/\s/g, "");
 
-    console.log(process.env.SMTP_EMAIL);
+    if (!user || !pass) {
+      throw new Error("SMTP_EMAIL and SMTP_PASSWORD are required");
+    }
+
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.SMTP_EMAIL, // sender email
-        pass: process.env.SMTP_PASSWORD, // Gmail App Password
+        user, // sender email
+        pass, // Gmail App Password
       },
     });
 
     // Mail options
     const mailOptions = {
-      from: process.env.SMTP_EMAIL,
+      from: `"Vivah e-Connect" <${user}>`,
       to,
       subject,
       html,

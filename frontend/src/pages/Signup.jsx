@@ -12,6 +12,9 @@ function Register() {
   const [errors, setErrors] = useState([]);
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -44,6 +47,8 @@ function Register() {
   
   const handleStart = async (e) => {
   e.preventDefault();
+  setErrors([]);
+  setIsSendingOtp(true);
   try {
     await api.post("/auth/sendOtp", {
       email: formData.email
@@ -53,9 +58,14 @@ function Register() {
     setCanResend(false);
   } catch (err) {
     console.log(err.response?.data);
+    setErrors([{ msg: err.response?.data?.message || "Unable to send OTP. Please try again." }]);
+  } finally {
+    setIsSendingOtp(false);
   }
 };
 const handleResendOtp = async () => {
+  setErrors([]);
+  setIsSendingOtp(true);
   try {
     await api.post("/auth/sendOtp", {
       email: formData.email
@@ -65,11 +75,16 @@ const handleResendOtp = async () => {
     setCanResend(false);
   } catch (err) {
     console.log(err.response?.data);
+    setErrors([{ msg: err.response?.data?.message || "Unable to resend OTP. Please try again." }]);
+  } finally {
+    setIsSendingOtp(false);
   }
 };
 
 const handleVerify = async (e) => {
   e.preventDefault();
+  setErrors([]);
+  setIsVerifyingOtp(true);
   try {
     const res = await api.post("/auth/verifyOtp", {
       email: formData.email,
@@ -82,10 +97,15 @@ const handleVerify = async (e) => {
     setStep(3);
   } catch (err) {
     console.log(err.response?.data);
+    setErrors([{ msg: err.response?.data?.message || "Invalid OTP. Please try again." }]);
+  } finally {
+    setIsVerifyingOtp(false);
   }
 };
 const handleComplete = async (e) => {
   e.preventDefault();
+  setErrors([]);
+  setIsCreatingAccount(true);
   try {
     await signup({
       ...formData,
@@ -96,12 +116,13 @@ const handleComplete = async (e) => {
   } catch (err) {
     if (err.response && err.response.data.errors) {
       setErrors(err.response.data.errors);
+    } else {
+      setErrors([{ msg: err.response?.data?.message || "Unable to create account. Please try again." }]);
     }
+  } finally {
+    setIsCreatingAccount(false);
   }
 };
-
-  const style = "border p-2 w-full mb-3 rounded";
-  const styleBtn = "bg-red-600 text-white rounded w-full p-2";
 
  return (
   <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center px-4">
@@ -155,9 +176,13 @@ const handleComplete = async (e) => {
 
           <button
             type="submit"
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+            disabled={isSendingOtp}
+            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-pink-300 disabled:cursor-not-allowed text-white py-2 rounded-lg transition flex items-center justify-center gap-2"
           >
-            Send OTP
+            {isSendingOtp && (
+              <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            )}
+            {isSendingOtp ? "Sending OTP..." : "Send OTP"}
           </button>
         </form>
       )}
@@ -186,20 +211,26 @@ const handleComplete = async (e) => {
 
           <button
             type="submit"
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+            disabled={isVerifyingOtp}
+            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-pink-300 disabled:cursor-not-allowed text-white py-2 rounded-lg transition flex items-center justify-center gap-2"
           >
-            Verify OTP
+            {isVerifyingOtp && (
+              <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            )}
+            {isVerifyingOtp ? "Verifying..." : "Verify OTP"}
           </button>
 
           <button
             type="button"
             onClick={handleResendOtp}
-            disabled={!canResend}
+            disabled={!canResend || isSendingOtp}
             className={`text-sm ${
               canResend ? "text-blue-600" : "text-gray-400"
             }`}
           >
-            {canResend
+            {isSendingOtp
+              ? "Sending..."
+              : canResend
               ? "Resend OTP"
               : `Resend in ${timer}s`}
           </button>
@@ -295,9 +326,13 @@ const handleComplete = async (e) => {
 
           <button
             type="submit"
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition"
+            disabled={isCreatingAccount}
+            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-pink-300 disabled:cursor-not-allowed text-white py-2 rounded-lg transition flex items-center justify-center gap-2"
           >
-            Create Account
+            {isCreatingAccount && (
+              <span className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            )}
+            {isCreatingAccount ? "Creating..." : "Create Account"}
           </button>
         </form>
       )}
