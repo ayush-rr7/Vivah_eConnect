@@ -58,15 +58,15 @@ return (
               <a href={`/profile/${u._id}`}>
 
                 {/* Image Section */}
-                <div className="relative">
+               <div className="relative overflow-hidden">
                   <img
                     src={u.Images[0]}
                     alt="profile"
-                    className="h-56 w-full object-cover object-top"
+                    className="h-64 w-full object-cover object-[center_20%] "
                   />
 
                   {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
                   {/* Name + Age on image */}
                   <div className="absolute bottom-2 left-3 text-white">

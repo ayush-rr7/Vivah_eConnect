@@ -4,7 +4,7 @@ import {createProfiles}  from "../api/profileService"
 import '../index.css'
 
 function CreateProfile() {
-  // const api = "http://localhost:3002/api/user";
+  
   const [formData, setFormData] = useState({
     Name: "",
     Age: "",
@@ -12,7 +12,7 @@ function CreateProfile() {
     Height_In: "",
     Weight: "",
     Caste: "",
-    Relegion: "",
+    Religion: "",
     Education: "",
     Job_Details: "",
     Income: "",
@@ -53,10 +53,7 @@ function CreateProfile() {
       userData.append("imageURL",file); // SAME FIELD NAME
       });
 
-//       const res = await axios.post(api,userData,{
-//   withCredentials: true
-// } );
-      
+
 const res= await createProfiles(userData);
 console.log(userData);
       alert(` User ${res.data.Name} data saved sucessfully`)
@@ -68,7 +65,7 @@ console.log(userData);
           Height_In: "",
           Weight: "",
           Caste: "",
-          Relegion: "",
+          Religion: "",
           Education: "",
           Job_Details: "",
           Income: "",
@@ -278,8 +275,8 @@ console.log(userData);
               Religion
             </label>
             <select
-              name="Relegion"
-              value={formData.Relegion}
+              name="Religion"
+              value={formData.Religion}
               onChange={handleChange}
               className="input-field"
             >
@@ -345,11 +342,11 @@ console.log(userData);
                   <input
                     type="radio"
                     name="Martial_Status"
-                    value="Unmarried"
-                    checked={formData.Martial_Status === "Unmarried"}
+                    value="Never Married"
+                    checked={formData.Martial_Status === "Never Married"}
                     onChange={handleChange}
                   />
-                  Unmarried
+                  Never Married
                 </label>
 
                 <label className="flex items-center gap-2">

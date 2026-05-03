@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getConnection, connectionRes } from "../api/connectionService";
 import { useAuth } from "../context/AuthContext";
-// import { getActiveProfileId } from "../utils/getActiveProfile";
+
 
 function Connections() {
 const { profiles } = useAuth();
-// const profileId = profiles?.[0]?._id;
-// const profileId =  getActiveProfileId();;
+
 const { activeProfileId: profileId } = useAuth();
 
 const [connections, setConnections] = useState([]);
@@ -195,78 +194,3 @@ return (
 }
 
 export default Connections;
-
-// import { getConnection, connectionRes } from "../api/connectionService";
-// import { useState,useEffect } from "react";
-// import { useAuth } from "../context/AuthContext";
-// import { Link } from "react-router-dom";
-
-// function Connection(){
-// const { profiles } = useAuth();
-// const [connections, setConnections] = useState([]);
-//  const senderProfileId = profiles?.[0]?._id;
- 
-// const fetchConnection = async () => {
-// try{
-//   const res = await getConnection(senderProfileId,"pending");
-//   setConnections(res.data);
-//   // console.log(res.data);
-// }catch(err){
-//   console.log(err);
-// }
-// };
-
-// useEffect(()=>{
-//   if(!senderProfileId) return 
-
-//   fetchConnection();
-// },[senderProfileId]);
-
-// const handleResponse = async (id, action) => {
-
-// try{
-
-// await connectionRes(id, action);
-
-// fetchConnection(); // refresh list
-
-// }catch(err){
-// console.log(err);
-// }
-
-// };
-// if(!senderProfileId){
-// return <div>Loading...</div>   // ✅ correct place
-// }
-
-// return(
-// <div>
-// <Link to="/sent">Sent</Link>
-// <Link to="/received">Sent</Link>
-// <h1>Connection List</h1>
-
-// {connections.map((c)=>(
-  
-// <div key={c._id}>
-
-// {c.receiverProfileId
-// } : {c.status}
-
-// <button onClick={()=>handleResponse(c._id,className={btnStyle}"accepted")}>
-// Accept
-// </button>
-
-// <button onClick={()=>handleResponse(c._id,className={btnStyle}"rejected")}>
-// Reject
-// </button>
-
-// </div>
-
-// ))}
-
-// </div>
-// )
-
-// }
-
-// export default Connection;

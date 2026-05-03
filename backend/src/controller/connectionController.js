@@ -1,4 +1,3 @@
-// import connection from "../models/Connection";
 import Connection from "../models/Connection.js";
 
 const getConnection = async (req, res) => {
@@ -31,7 +30,7 @@ const getConnection = async (req, res) => {
 
 const connectionRequest = async (req, res) => {
   try {
-    // console.log(req.body);
+    
     const senderProfileId = req.body.senderProfileId;
     const receiverProfileId = req.body.receiverProfileId;
     if (senderProfileId === receiverProfileId) {
@@ -55,7 +54,7 @@ const connectionRequest = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Connection Request Sent Sucessfully",
-    }); // send back to frontend
+    }); 
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });

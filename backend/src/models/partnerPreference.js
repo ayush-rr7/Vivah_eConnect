@@ -1,8 +1,7 @@
  import mongoose from 'mongoose'
   
   const prefrenceSchema = mongoose.Schema({
- // models/Profile.js
-// Add this inside your Profile Schema
+ 
  profileId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Profile",

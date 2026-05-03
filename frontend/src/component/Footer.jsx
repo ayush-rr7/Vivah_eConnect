@@ -21,9 +21,9 @@ function Footer() {
           <h3 className={headingStyle}>Quick Links</h3>
           <ul className="space-y-2">
             <li><a href="#" className={linkStyle}>Home</a></li>
-            <li><a href="#" className={linkStyle}>Browse Profiles</a></li>
-            <li><a href="#" className={linkStyle}>Connections</a></li>
-            <li><a href="#" className={linkStyle}>Messages</a></li>
+            <li><a href="/profiles" className={linkStyle}>Browse Profiles</a></li>
+            <li><a href="/connections" className={linkStyle}>Connections</a></li>
+            <li><a href="/chat" className={linkStyle}>Messages</a></li>
           </ul>
         </div>
 

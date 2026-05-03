@@ -128,7 +128,7 @@ console.log(senderProfileId,receiverProfileId);
         {/* Header */}
         <div className="p-4 border-b flex justify-between items-center">
           <h1 className="text-lg font-semibold text-gray-800">
-            {profile?.name || "Chat"}
+            {profile?.Name || "Chat"}
           </h1>
 
           <span className="text-sm text-gray-500">

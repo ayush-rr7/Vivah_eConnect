@@ -145,7 +145,7 @@ const signup = async (req,res)=>{
       contact,
     });
       const savedUser = await user.save();
-      console.log(savedUser);
+    
    console.log("saved User successfully");
     res.status(201).json({
       success: true,
@@ -214,7 +214,7 @@ console.log("DONE");
   }
   catch(err){
     console.log(err);
-    return res.status(500).json({message: err.message});
+    return res.status(500).json({ message: "Server error. Please try again later."});
   }
  
 }
@@ -264,12 +264,4 @@ const logout= async(req,res,next)=>{
 }
 
 
-export default {sendOtp,verifyOtp,signup,login,logout,account,};  // using signup without braces need to import one by one in router
-
-/*Plans for authentication
-
-s1: ON post signup convert password to hash and then store it to db using bcrypt  + 
-
-s2: while post Login check
-
-*/
+export default {sendOtp,verifyOtp,signup,login,logout,account,};  

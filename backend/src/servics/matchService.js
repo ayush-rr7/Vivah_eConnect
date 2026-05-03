@@ -1,5 +1,5 @@
 import Profile from "../models/Profile.js";
-import PartnerPreference from "../models/PartnerPreference.js";
+import PartnerPreference from "../models/partnerPreference.js";
 import { calculateCompatibility } from "../utils/compatibility.js";
 
 export const getMatches = async (profileId) => {
@@ -12,19 +12,26 @@ export const getMatches = async (profileId) => {
   }
 
   const pref = prefDoc;
+const currentProfile = await Profile.findById(profileId).select("Gender");
 
-  // ---------------- BASE QUERY ----------------
-  const query = {
-    _id: { $ne: profileId },
-  };
+const genderMap = {
+  Male: "female",
+  Female: "male",
+};
+
+const query = {
+  _id: { $ne: profileId },
+  Gender: genderMap[currentProfile.Gender],
+};
+
 
   // ---------------- HARD FILTERS (DB LEVEL) ----------------
-  // if (pref.religion) query.religion = pref.religion;
-  // if (pref.caste) query.caste = pref.caste;
+  if (pref.religion) query.Religion = pref.religion;
+  // if (pref.caste) query.Caste = pref.caste;
 
   // ---------------- FETCH PROFILES ----------------
   const profiles = await Profile.find(query)
-    .select("Name Age Location Height_Ft Height_In Education Income Martial_Status Relegion Caste Images")
+    .select("Name Age Location Height_Ft Height_In Education Income Martial_Status Religion Caste Images")
     .limit(50); // keep limit for performance
  
   // ---------------- CALCULATE COMPATIBILITY ----------------
@@ -34,7 +41,7 @@ export const getMatches = async (profileId) => {
     const mappedProfile = {
       age: Number(p.Age),
       height: `${p.Height_Ft || 0}'${p.Height_In || 0}"`,
-      religion: p.Relegion,
+      religion: p.Religion,
       caste: p.Caste,
       education: p.Education,
       location: p.Location,
@@ -52,6 +59,7 @@ export const getMatches = async (profileId) => {
       age: p.Age,
       location: p.Location,
       income:p.Income,
+       maritalStatus: p.Martial_Status,
        images: p.Images,
       compatibility,
     };
@@ -67,7 +75,7 @@ export const getMatches = async (profileId) => {
 
   for (const p of results) {
     // console.log(compatibility);
-    if (p.compatibility >= 90) {
+    if (p.compatibility >= 85) {
       if (perfect.length < 5) {
         perfect.push(p);
       }

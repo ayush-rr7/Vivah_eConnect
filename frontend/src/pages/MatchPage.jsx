@@ -28,7 +28,7 @@ const MatchesPage = () => {
 
       {/* PERFECT */}
       <div>
-        <h2 className="text-xl font-bold mb-3">💎 Perfect Matches</h2>
+        <h2 className="text-xl font-bold mb-3"> Perfect Matches</h2>
 
      <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
           { loading
@@ -44,7 +44,7 @@ const MatchesPage = () => {
 
       {/* STRONG */}
       <div>
-        <h2 className="text-xl font-bold mb-3">🔥 Strong Matches</h2>
+        <h2 className="text-xl font-bold mb-3"> Strong Matches</h2>
 
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
            {loading
@@ -57,7 +57,7 @@ const MatchesPage = () => {
 
       {/* EXPLORE */}
       <div>
-        <h2 className="text-xl font-bold mb-3">⚡ Explore More</h2>
+        <h2 className="text-xl font-bold mb-3">Explore More</h2>
 
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
            {loading

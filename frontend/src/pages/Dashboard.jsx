@@ -1,13 +1,30 @@
-
+import { useState,useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import {getProfiles} from '../api/profileService.js'
 function Dashboard() {
 const {user,logout} =useAuth();
 const navigate = useNavigate();
 
+
+
+const [profiles, setProfiles] = useState([]);
+
+useEffect(() => {
+  const fetchProfiles = async () => {
+    try {
+      const res =await getProfiles();
+      setProfiles(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchProfiles();
+}, []);
+
 const handleMatches = () => {
-  navigate("/profiles");
+  navigate("/matches");
 };
 
 const handleConnections = () => {
@@ -113,25 +130,57 @@ Welcome Back
 
 {/* Quick Stats */}
 
-<div className="grid grid-cols-3 gap-6 mb-10">
+{/* Discover Profiles */}
+<div className="bg-white p-6 rounded-xl shadow mb-10">
 
-<div className="bg-white p-6 rounded-lg shadow text-center">
-<h3 className="text-xl font-semibold">12</h3>
-<p className="text-gray-500">Matches</p>
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-lg font-semibold">
+      Discover Profiles
+    </h2>
+
+    <button
+      onClick={handleMatches}
+      className="text-sm text-pink-600 hover:underline"
+    >
+      View All →
+    </button>
+  </div>
+
+  {profiles.length === 0 ? (
+    <p className="text-sm text-gray-500">
+      No profiles available
+    </p>
+  ) : (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {profiles.slice(0, 4).map((p) => (
+        <div
+          key={p._id}
+          className="bg-pink-50 rounded-lg p-3 hover:shadow transition"
+        >
+          <img
+            src={p.Images?.[0]}
+            className="h-40 w-full object-cover object-[center_20%] rounded-md mb-2 "
+          />
+
+          <h3 className="text-sm font-semibold">
+            {p.Name}
+          </h3>
+
+          <p className="text-xs text-gray-500">
+            {p.Location}
+          </p>
+
+          <button
+            onClick={() => navigate(`/profile/${p._id}`)}
+            className="mt-2 text-xs text-pink-600 hover:underline"
+          >
+            View Profile
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
 </div>
-
-<div className="bg-white p-6 rounded-lg shadow text-center">
-<h3 className="text-xl font-semibold">5</h3>
-<p className="text-gray-500">Pending Requests</p>
-</div>
-
-<div className="bg-white p-6 rounded-lg shadow text-center">
-<h3 className="text-xl font-semibold">3</h3>
-<p className="text-gray-500">Messages</p>
-</div>
-
-</div>
-
 
 {/* Action Cards */}
 

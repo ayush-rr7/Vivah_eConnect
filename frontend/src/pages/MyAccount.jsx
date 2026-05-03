@@ -7,24 +7,7 @@ import {SkeletonCard,SkeletonUser} from "../component/skeleton.jsx"
 
 function MyAccount() {
 
-//    const { user, profiles,loading } = useAuth();
-//     const [activeProfileId, setActiveProfileId] = useState(
-//   localStorage.getItem("activeProfileId")
-//   );
- 
-//   useEffect(() => {
-//   if (!activeProfileId && profiles?.length) {
-//     setActiveProfileId(profiles[0]._id);
-//     localStorage.setItem("activeProfileId", profiles[0]._id);
-//   }
-// }, [profiles]);
 
-// const handleActiveProfile = (profileId, e) => {
-//   e.preventDefault(); // ❗ prevents <a> navigation
-
-//   localStorage.setItem("activeProfileId", profileId);
-//   setActiveProfileId(profileId);
-// };
 const { user, loading,profiles, activeProfileId, setActiveProfileId } = useAuth();
 
 const handleActiveProfile = (profileId, e) => {
@@ -85,42 +68,43 @@ const handleActiveProfile = (profileId, e) => {
           : profiles?.map((u) => (
               <div
                 key={u._id}
-                className={`bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1
+                className={` w-xs bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1
                 ${activeProfileId === u._id ? "ring-2 ring-green-500" : ""}`}
               >
 
-                <Link to={`/profile/${u._id}`}>
+              <Link to={`/profile/${u._id}`}
+                    className="flex items-center gap-4 p-1"
+                  >
+                    {/* Profile Image */}
+                    <div className="h-40 w-32 flex-shrink-0 overflow-hidden rounded-lg">
+                      <img
+                        src={u.Images[0]}
+                        alt="profile"
+                        className="w-full h-full object-cover object-[center_25%]"
+                      />
+                    </div>
 
-                  {/* Profile Image */}
-                  <div className="h-40 w-full overflow-hidden">
-                    <img
-                      src={u.Images[0]}
-                      alt="profile"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
+                    {/* Profile Info */}
+                    <div className="flex-1 space-y-2 text-sm">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {u.Name}
+                      </h3>
 
-                  {/* Profile Info */}
-                  <div className="p-4 space-y-1 text-sm">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {u.Name}
-                    </h3>
+                      <p className="text-gray-500">
+                        {u.Age} yrs • {u.Gender}
+                      </p>
 
-                    <p className="text-gray-500">
-                      {u.Age} yrs • {u.Gender}
-                    </p>
+                      <p className="text-gray-600">{u.Caste}</p>
 
-                    <p className="text-gray-600">{u.Caste}</p>
+                      <p className="text-green-600 font-medium">
+                        ₹ {u.Income}
+                      </p>
 
-                    <p className="text-green-600 font-medium">
-                      ₹ {u.Income}
-                    </p>
-
-                    <span className="inline-block bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs">
-                      {u.Martial_Status}
-                    </span>
-                  </div>
-                </Link>
+                      <span className="inline-block bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs">
+                        {u.Martial_Status}
+                      </span>
+                    </div>
+                  </Link>
 
                 {/* Action Section */}
                 <div className="px-4 pb-4">

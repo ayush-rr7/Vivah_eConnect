@@ -4,7 +4,7 @@ import PartnerPreference from "../models/partnerPreference.js";
 
 const addUser = async (req, res) => {
   try {
-    console.log("Got req to add user");
+    // console.log("Got req to add user");
     const {
       Name,
       Age,
@@ -12,7 +12,7 @@ const addUser = async (req, res) => {
       Height_In,
       Weight,
       Caste,
-      Relegion,
+      Religion,
       Education,
       Job_Details,
       Income,
@@ -39,7 +39,7 @@ const addUser = async (req, res) => {
       Height_In,
       Weight,
       Caste,
-      Relegion,
+      Religion,
       Education,
       Job_Details,
       Income,
@@ -54,7 +54,7 @@ const addUser = async (req, res) => {
     const savedUser = await newUser.save();
     console.log("saved");
 
-    res.status(201).json(savedUser); //  send back to frontend
+    res.status(201).json(savedUser); 
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });
@@ -65,7 +65,7 @@ const addUser = async (req, res) => {
 const getPreferences = async (req, res) => {
   try {
     const { profileId } = req.params;
-    console.log(profileId);
+    // console.log(profileId);
     const preferences = await PartnerPreference.findOne({ profileId });
 
     return res.json({ preferences });
@@ -123,7 +123,7 @@ const savePreferences = async (req, res) => {
       }
     );
 
-    console.log(savedPreference);
+    // console.log(savedPreference);
 
     res.status(200).json({
       message: "Partner Preferences saved successfully",
@@ -154,12 +154,12 @@ const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     // console.log(id);
-     console.log("hello Dear");
+   
     const user = await Profile.findById(id);
     // const user= await Profile.find();
     res.json(user);
    
-    console.log(user);
+    // console.log(user);
     console.log("fetched sucessfully");
   } catch (err) {
     console.log(err.message);
@@ -177,7 +177,7 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    console.log("hi");
+  
     const updateTask = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

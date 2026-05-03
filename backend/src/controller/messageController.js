@@ -2,14 +2,12 @@ import Message from '../models/Message.js';
 
 export const getChatHistory = async (req, res) => {
 
-  console.log("IN msg controller");
+  console.log("updating chats");
   // const senderProfileId = req.senderProfileId; // from JWT 
   const { senderProfileId, receiverProfileId } = req.query
   
-
   console.log(senderProfileId, receiverProfileId);
   
-
   try {
     const messages = await Message.find({
       $or: [

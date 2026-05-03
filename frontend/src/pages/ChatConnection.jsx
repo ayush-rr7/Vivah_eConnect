@@ -26,27 +26,6 @@ useEffect(()=>{
 },[profileId]);
 
 
-// const [users, setUsers] = useState([]);
- 
-//   const fetchUser = async () => {
-//     try {
-//       const res = await getProfileDetail(id);
-//       setUsers(res.data);
-//       // console.log(res.data);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchUser();
-//   }, [receiverProfileId]);
-
-
-
-
-
-
 
 return (
   <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-8">

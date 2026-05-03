@@ -26,7 +26,7 @@
       type:String,
       // required:true,
     },
-    Relegion:{
+    Religion:{
       type:String,
       // required:true,
     },
@@ -67,11 +67,7 @@
     ref: "User",
     required: true,
   },
-//   partnerPreferenceId: {
-//   type: mongoose.Schema.Types.ObjectId,
-//   ref: "PartnerPreferences",
-//   default: null,
-// },
+
     });
     
     
