@@ -55,7 +55,7 @@ return (
 <div className="w-64 bg-white shadow-lg p-6">
 
 <h2 className="text-2xl font-bold text-pink-600 mb-8">
-Vivah E-Connect
+Vivah-eConnect
 </h2>
 
 <ul className="space-y-4">

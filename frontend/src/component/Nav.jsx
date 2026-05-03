@@ -30,7 +30,7 @@ export default function Navbar() {
           className="text-xl font-bold text-pink-600 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          Vivah<span className="text-gray-800">eConnect</span>
+          Vivah<span className="text-gray-800">-eConnect</span>
         </div>
 
         {/* Links */}
