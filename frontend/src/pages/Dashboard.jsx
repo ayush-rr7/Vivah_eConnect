@@ -26,6 +26,9 @@ useEffect(() => {
 const handleMatches = () => {
   navigate("/matches");
 };
+const handleCreateProfile = () => {
+  navigate("/register");
+};
 
 const handleConnections = () => {
   navigate("/connections");
@@ -54,8 +57,7 @@ return (
 
 <div className="w-64 bg-white shadow-lg p-6">
 
-<h2 className="text-2xl font-bold text-pink-600 mb-8">
-Vivah-eConnect
+<h2 className="text-2xl font-bold text-pink-600 mb-8"> Vivah<span className="text-gray-800">-eConnect</span>
 </h2>
 
 <ul className="space-y-4">
@@ -75,6 +77,14 @@ className="w-full text-left hover:text-pink-600"
 onClick={handleMatches}
 >
 Profiles
+</button>
+</li>
+<li>
+<button
+className="w-full text-left hover:text-pink-600"
+onClick={handleCreateProfile}
+>
+Register Profile
 </button>
 </li>
 

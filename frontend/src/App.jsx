@@ -55,6 +55,7 @@ if (loading) {
         <Route path="/dashboard" element ={<Dashboard/>}/>
         <Route path="/Account" element={<MyAccount/>}/>
         <Route path="/register" element={<CreateProfile />} />
+        <Route path="/profile/edit/:id" element={<CreateProfile />} />
         <Route path="/profiles" element={<ProfileList/>}/>
         <Route path="/profile/:id" element={<ProfileDetail/>}/>
 
@@ -64,7 +65,7 @@ if (loading) {
         <Route path="/connections" element={<Connection />} />
         <Route path="/Chat" element={<ChatConnection />} />
         <Route path="/Chat/:id" element={<Chat />} />
-   
+
          </Route>
         </Routes> 
        </main>

@@ -7,7 +7,7 @@ function FullScreenLoader() {
         <div className="h-12 w-12 border-4 border-pink-300 border-t-pink-600 rounded-full animate-spin" />
 
         <p className="text-gray-600 text-sm">
-          Loading your profile...
+        Loading content...
         </p>
 
       </div>

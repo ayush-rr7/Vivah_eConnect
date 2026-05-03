@@ -4,7 +4,7 @@ import { getMatches } from "../servics/matchService.js";
   try {
     
     const { profileId } = req.params;
-console.log(profileId);
+// console.log(profileId);
     const data = await getMatches(profileId);
 
     res.json(data);

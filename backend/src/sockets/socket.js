@@ -16,7 +16,7 @@ const initSocket = (server) => {
 
   // Listen for global server events like establishing connection
   io.on("connection", (socket) => {
-    console.log("✅ Connected:", socket.user.id);
+    console.log(" Connected:", socket.user.id);
 
     chatHandler(io, socket);
   });

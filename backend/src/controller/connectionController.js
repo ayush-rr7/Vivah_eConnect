@@ -65,7 +65,7 @@ const respondConnection = async (req, res) => {
   try {
     const { connectionId } = req.params;
     const { status } = req.body;
-    console.log(req.params);
+    // console.log(req.params);
 
     const connection = await Connection.findByIdAndUpdate(
       connectionId,

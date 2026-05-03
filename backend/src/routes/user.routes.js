@@ -12,6 +12,7 @@ userRouter.get('/pref/:profileId',userController.getPreferences);
 userRouter.put('/pref/:profileId',userController.savePreferences);
 
 userRouter.get('/user1',userController.getUser);
+userRouter.put('/user/:id',userController.updateUser);
 userRouter.get('/user1/:id',userController.getUserById);
 userRouter.delete('/user/:id',userController.deleteUser);
 userRouter.put('/user',userController.updateUser);

@@ -12,7 +12,8 @@ const chatHandler = async(io, socket) => {
   onlineUsers.set(senderProfileId, socket.id);
   console.log("Online Users:", onlineUsers);
 
-  // ✅ deliver missed messages
+  //deliver missed messages
+  
   const pendingMessages = await Message.find({
     receiverProfileId: senderProfileId,
     status: "sent"
@@ -65,7 +66,7 @@ socket.on("send_message", async ({ message, receiverProfileId }) => {
 
   socket.on("disconnect", () => {
     onlineUsers.delete(senderProfileId);
-    console.log("❌ Disconnected:", senderProfileId);
+    console.log(" Disconnected:", senderProfileId);
   });
 
 };

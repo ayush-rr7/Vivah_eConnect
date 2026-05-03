@@ -18,12 +18,6 @@ const userSchema = mongoose.Schema({
   },
   // isVerified: { type: Boolean, default: false },
 
-  // otp: String,
-  // otpExpiry: Date,
-  // contact: {
-  //   type: String,
-  //   // required:true,
-  // },
   password: {
     type: String,
     required: true,

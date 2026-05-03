@@ -113,7 +113,7 @@ export const calculateCompatibility = (userPref, profile) => {
       (!userPref.incomeMax || profile.income <= userPref.incomeMax)
     ) {
       score += weights.income;
-      // score=100;
+      
     }
   }
 

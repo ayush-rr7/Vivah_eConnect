@@ -177,14 +177,26 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-  
-    const updateTask = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.json(updateTask);
+    const updateData = { ...req.body };
+
+    //ONLY update images if new files are uploaded
+    if (req.files && req.files.length > 0) {
+      updateData.Images = req.files.map((file) => file.path);
+    }
+
+    // If no new images → Images field NOT touched
+
+    const updatedProfile = await Profile.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    res.json(updatedProfile);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Error updating profile" });
   }
+  
 };
 
 

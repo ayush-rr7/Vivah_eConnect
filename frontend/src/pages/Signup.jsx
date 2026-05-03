@@ -300,7 +300,7 @@ const handleComplete = async (e) => {
                 <input
                   type="radio"
                   name="gender"
-                  value="Male"
+                  value="male"
                   checked={formData.gender === "Male"}
                   onChange={handleChange}
                 /> Male
@@ -310,8 +310,8 @@ const handleComplete = async (e) => {
                 <input
                   type="radio"
                   name="gender"
-                  value="Female"
-                  checked={formData.gender === "Female"}
+                  value="female"
+                  checked={formData.gender === "female"}
                   onChange={handleChange}
                 /> Female
               </label>

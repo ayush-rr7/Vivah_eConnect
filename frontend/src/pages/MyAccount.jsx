@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import {SkeletonCard,SkeletonUser} from "../component/skeleton.jsx"
 
+
 function MyAccount() {
 
 
@@ -14,6 +15,7 @@ const handleActiveProfile = (profileId, e) => {
   e.preventDefault();
   setActiveProfileId(profileId);
 };
+const navigate = useNavigate();
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-6 px-4">
@@ -38,14 +40,14 @@ const handleActiveProfile = (profileId, e) => {
         user && (
           <div>
             <h2 className="text-xl font-semibold text-gray-800">
-              {user.Name}
+              {user.name}
             </h2>
-            <p className="text-gray-600 text-sm">{user.Email}</p>
-            <p className="text-gray-500 text-sm">{user.City}</p>
+            <p className="text-gray-600 text-sm">{user.email}</p>
+            <p className="text-gray-500 text-sm">{user.city}</p>
 
             <Link
               to={`/PartnerPreferences`}
-              className="inline-block mt-2 text-pink-600 text-sm hover:underline"
+              className="inline-block mt-2 text-pink-600 text-lg hover:underline"
             >
               Edit Partner Preferences →
             </Link>
@@ -106,23 +108,36 @@ const handleActiveProfile = (profileId, e) => {
                     </div>
                   </Link>
 
-                {/* Action Section */}
-                <div className="px-4 pb-4">
+               <div className="px-4 pb-4">
 
-                  {activeProfileId === u._id ? (
-                    <p className="text-green-600 font-semibold text-sm">
-                      Active Profile
-                    </p>
-                  ) : (
-                    <button
-                      onClick={(e) => handleActiveProfile(u._id, e)}
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition"
-                    >
-                      Set as Active
-                    </button>
-                  )}
+  {activeProfileId === u._id ? (
+    <p className="text-green-600 font-semibold text-sm mb-2">
+      Active Profile
+    </p>
+  ) : null}
 
-                </div>
+  <div className="flex gap-2">
+
+    {/* Set Active */}
+    {activeProfileId !== u._id && (
+      <button
+        onClick={(e) => handleActiveProfile(u._id, e)}
+        className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition"
+      >
+        Set Active
+      </button>
+    )}
+
+    {/* Edit */}
+    <button
+      onClick={() => navigate(`/profile/edit/${u._id}`)}
+      className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg text-sm transition"
+    >
+      Edit
+    </button>
+
+  </div>
+</div>
               </div>
             ))}
       </div>

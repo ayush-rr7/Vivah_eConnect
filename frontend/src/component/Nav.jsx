@@ -59,12 +59,16 @@ export default function Navbar() {
               <NavLink to="/matches" className={linkStyle}>
                 Matches
               </NavLink>
+              
               <NavLink to="/connections" className={linkStyle}>
                 Connections
               </NavLink>
               <NavLink to="/chat" className={linkStyle}>
                 Chat
               </NavLink>
+               {/* <NavLink to="/register" className={linkStyle}> 
+          Register
+        </NavLink> */}
               <NavLink to="/account" className={linkStyle}>
                 My Account
               </NavLink>
