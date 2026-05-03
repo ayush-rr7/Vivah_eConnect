@@ -24,7 +24,7 @@ useEffect(() => {
 }, []);
 
 const handleMatches = () => {
-  navigate("/matches");
+  navigate("/profiles");
 };
 const handleCreateProfile = () => {
   navigate("/register");

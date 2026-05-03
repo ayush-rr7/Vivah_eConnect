@@ -13,11 +13,14 @@ export const getMatches = async (profileId) => {
 
   const pref = prefDoc;
 const currentProfile = await Profile.findById(profileId).select("Gender");
-
+console.log(currentProfile)
 const genderMap = {
-  Male: "female",
-  Female: "male",
+
+  male: "female",
+  female: "male",
+
 };
+console.log(genderMap[currentProfile.Gender])
 
 const query = {
   _id: { $ne: profileId },
