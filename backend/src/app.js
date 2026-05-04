@@ -24,14 +24,15 @@ mongoose.connect(process.env.MONGODB_URI, {
   .then(() => console.log("Connected to MongoDB!"))
   .catch(err => console.error("Connection error:", err));
 
-
-
 app.use(cors({
   origin: ["http://localhost:5173","https://vivah-econnect.vercel.app" ],
   credentials: true
 }));
+app.options("*", cors()); 
+
+
 app.use(express.json());  //for parsing json data
-app.use(express.urlencoded());//for parsing form data 
+app.use(express.urlencoded({ extended: true }));//for parsing form data 
 app.use(cookieParser());  //for parsing jwt 
 
 
