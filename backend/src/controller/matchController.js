@@ -8,7 +8,7 @@ import { getMatches } from "../servics/matchService.js";
     const data = await getMatches(profileId);
 
     res.json(data);
-    console.log(data);
+    // console.log(data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching matches" });
