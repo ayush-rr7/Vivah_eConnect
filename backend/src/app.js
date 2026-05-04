@@ -28,7 +28,7 @@ app.use(cors({
   origin: ["http://localhost:5173","https://vivah-econnect.vercel.app" ],
   credentials: true
 }));
-app.options("*", cors()); 
+// app.options("*", cors()); 
 
 
 app.use(express.json());  //for parsing json data
