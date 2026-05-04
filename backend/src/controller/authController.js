@@ -252,7 +252,7 @@ const logout= async(req,res,next)=>{
   console.log("User Logging Out");
   try{
     res
-  .clearCookie("token", token, {
+  .clearCookie("token",{
   httpOnly: true,
   secure: true,
   sameSite: "None",
@@ -262,7 +262,7 @@ const logout= async(req,res,next)=>{
   .json({ message: "Logged out successfully" });
   }catch(err){
     console.log(err);
-    return err;
+    return res.status(500).json({ message: err.message });
   }
 
 }
