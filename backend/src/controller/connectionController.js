@@ -53,7 +53,8 @@ const connectionRequest = async (req, res) => {
     });
     res.status(201).json({
       success: true,
-      message: "Connection Request Sent Sucessfully",
+  message: "Connection Request Sent Successfully",
+  connection
     }); 
   } catch (err) {
     console.log(err);
