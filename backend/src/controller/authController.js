@@ -7,67 +7,50 @@ import rateLimit from "express-rate-limit";
 import Otp from "../models/Otp.js";
 import { sendEmail } from '../config/sendEmail.js';
 
-
 const sendOtp = async (req, res) => {
-  console.log("---- SEND OTP START ----");
-
   try {
     const { email } = req.body;
-    console.log("Incoming email:", email);
-
-    if (!email) {
-      console.log("Email missing in request");
-      return res.status(400).json({ message: "Email is required" });
-    }
-
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log("Generated OTP:", otp);
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-    console.log("Expires at:", expiresAt);
+    await Otp.deleteMany({ email });
 
-    console.log("Deleting old OTPs...");
-    const delRes = await Otp.deleteMany({ email });
-    console.log("Deleted count:", delRes.deletedCount);
-
-    console.log("Saving new OTP...");
-    const newOtp = new Otp({ email, otp, expiresAt });
+    // save new OTP
+    const newOtp = new Otp({
+      email,
+      otp,
+      expiresAt,
+    }); 
+    
     await newOtp.save();
-    console.log("OTP saved in DB");
-
+console.log("processing otp send");
+    //  EMAIL TEMPLATE
     const subject = "Your OTP for Vivah E-Connect";
-
     const html = `
       <h2>Email Verification</h2>
       <p>Your OTP is:</p>
       <h1>${otp}</h1>
       <p>This OTP will expire in 5 minutes.</p>
     `;
+    let emailSent = true;
 
-    console.log("Sending email...");
-
-    try {
-      await sendEmail({ to: email, subject, html });
-      console.log("Email sent successfully");
-    } catch (emailErr) {
-      console.log("Email failed:", emailErr);
-    }
-
-    console.log("---- SEND OTP SUCCESS ----");
-
+  try {
+  await sendEmail({ to: email, subject, html });
+  } catch (emailErr) {
+  console.log("Email failed:", emailErr.message);
+  emailSent = false;
+  }
+    console.log("otp sent"); 
+   
     return res.status(200).json({
       success: true,
       message: "OTP sent to email",
     });
+    
 
   } catch (err) {
-    console.log("---- SEND OTP ERROR ----");
     console.log(err);
-
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    return res.status(500).json({ message: err.message });
   }
 };
 

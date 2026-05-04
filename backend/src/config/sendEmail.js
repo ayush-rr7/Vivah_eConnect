@@ -10,7 +10,7 @@ export  const sendEmail = async ({ to, subject, html }) => {
     if (!user || !pass) {
       throw new Error("SMTP_EMAIL and SMTP_PASSWORD are required");
     }
-  console.log("at transporter");
+  
     // Create transporter
     const transporter = nodemailer.createTransport({
          host: "smtp.gmail.com",
@@ -37,7 +37,7 @@ export  const sendEmail = async ({ to, subject, html }) => {
     console.log("Email sent:", info.response);
     return info;
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("Email sending failed:", error.message);
     throw error;
   }
 };
