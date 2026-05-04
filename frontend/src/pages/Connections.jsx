@@ -38,7 +38,7 @@ console.log(err);
 const btnStyle="p-2 m-2 bg-pink-600 rounded text-white focus:bg-pink-500";
 
 if(!profileId){
-return <div>Loading...</div>   // ✅ correct place
+return <div>Loading...</div>   // correct place
 }
 
 
