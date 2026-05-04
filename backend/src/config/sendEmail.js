@@ -10,10 +10,13 @@ export  const sendEmail = async ({ to, subject, html }) => {
     if (!user || !pass) {
       throw new Error("SMTP_EMAIL and SMTP_PASSWORD are required");
     }
-
+  console.log("at transporter");
     // Create transporter
     const transporter = nodemailer.createTransport({
-        service: "gmail",
+         host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  family: 4,
       auth: {
         user, // sender email
         pass, // Gmail App Password
