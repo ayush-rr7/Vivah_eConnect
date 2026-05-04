@@ -42,6 +42,7 @@ return (
           c.senderProfileId === profileId
             ? c.receiverProfileId
             : c.senderProfileId;
+if (!otherProfile) return null;
 
         return (
           <div
@@ -72,7 +73,7 @@ return (
 
               {c.status === "accepted" && (
                 <Link
-                  to={`/chat/${otherProfile._id}`}
+                  to={`/chat/${otherProfile._id || otherProfile}`}
                   state={{ profile: otherProfile }}
                   className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg text-sm transition"
                 >
