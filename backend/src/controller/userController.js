@@ -142,7 +142,28 @@ const savePreferences = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const user = await Profile.find();
+    const { profileId }=req.params;
+    // console.log(profileId);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 15;
+
+    const currentProfile = await Profile.findById(profileId)
+      .select("Gender");
+
+    const genderMap = {
+      male: "female",
+      female: "male",
+    };
+
+    const query = {
+      _id: { $ne: profileId },
+      Gender: genderMap[currentProfile.Gender],
+    };
+
+    // const user = await Profile.find(query);
+    const user = await Profile.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
     res.json(user);
     console.log("fetched sucessfully");
   } catch (err) {

@@ -4,8 +4,9 @@ import { useAuth } from "../context/AuthContext";
 const PublicLayout = () => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) return null;
-
+  if (loading) {
+    return <Outlet />;
+  }
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }

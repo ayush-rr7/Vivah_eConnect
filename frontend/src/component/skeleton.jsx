@@ -1,14 +1,33 @@
-export function SkeletonCard() {
-  return (
-    <div className="bg-pink-200 p-2 rounded animate-pulse">
-      <div className="h-40 w-full bg-gray-300 rounded"></div>
 
-      <div className="h-4 bg-gray-300 mt-3 w-3/4 rounded"></div>
-      <div className="h-4 bg-gray-300 mt-2 w-1/2 rounded"></div>
-      <div className="h-4 bg-gray-300 mt-2 w-1/3 rounded"></div>
-      <div className="h-4 bg-gray-300 mt-2 w-2/3 rounded"></div>
+   export  function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden shadow-md animate-pulse">
+
+      {/* Image */}
+      <div className="h-64 bg-gray-300"></div>
+
+      <div className="p-4 space-y-3">
+
+        {/* Name */}
+        <div className="h-5 w-32 bg-gray-300 rounded"></div>
+
+        {/* Tags */}
+        <div className="flex gap-2">
+          <div className="h-6 w-16 bg-gray-300 rounded-full"></div>
+          <div className="h-6 w-16 bg-gray-300 rounded-full"></div>
+          <div className="h-6 w-16 bg-gray-300 rounded-full"></div>
+        </div>
+
+        {/* Text */}
+        <div className="h-4 w-24 bg-gray-300 rounded"></div>
+
+        {/* Button */}
+        <div className="h-10 w-full bg-gray-300 rounded-lg"></div>
+
+      </div>
     </div>
   );
+
 }
 export function SkeletonUser() {
   return (
@@ -19,3 +38,4 @@ export function SkeletonUser() {
     </div>
   );
 }
+

@@ -83,7 +83,7 @@ const query = {
       if (perfect.length < 5) {
         perfect.push(p);
       }
-    } else if (p.compatibility >= 70) {
+    } else if (p.compatibility >= 60) {
       if (strong.length < 20) {
         strong.push(p);
       }

@@ -2,10 +2,12 @@ import { useState,useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {getProfiles} from '../api/profileService.js'
-function Dashboard() {
-const {user,logout} =useAuth();
-const navigate = useNavigate();
 
+
+
+function Dashboard() {
+const {user,logout, activeProfileId:profileId } =useAuth();
+const navigate = useNavigate();
 
 
 const [profiles, setProfiles] = useState([]);
@@ -13,7 +15,7 @@ const [profiles, setProfiles] = useState([]);
 useEffect(() => {
   const fetchProfiles = async () => {
     try {
-      const res =await getProfiles();
+      const res =await getProfiles(profileId);
       setProfiles(res.data);
     } catch (err) {
       console.log(err);
@@ -23,7 +25,10 @@ useEffect(() => {
   fetchProfiles();
 }, []);
 
-const handleMatches = () => {
+const viewMatches = () => {
+  navigate("/matches");
+};
+const viewProfiles = () => {
   navigate("/profiles");
 };
 const handleCreateProfile = () => {
@@ -55,7 +60,7 @@ return (
 
 {/* Sidebar */}
 
-<div className="w-64 bg-white shadow-lg p-6">
+<div className="hidden md:block md:w-64 bg-white shadow-lg p-4 md:p-6">
 
 <h2 className="text-2xl font-bold text-pink-600 mb-8"> Vivah<span className="text-gray-800">-eConnect</span>
 </h2>
@@ -74,7 +79,7 @@ Dashboard
 <li>
 <button
 className="w-full text-left hover:text-pink-600"
-onClick={handleMatches}
+onClick={viewProfiles}
 >
 Profiles
 </button>
@@ -141,7 +146,7 @@ Welcome Back
 {/* Quick Stats */}
 
 {/* Discover Profiles */}
-<div className="bg-white p-6 rounded-xl shadow mb-10">
+<div className="bg-white p-2 rounded-xl shadow mb-10">
 
   <div className="flex justify-between items-center mb-4">
     <h2 className="text-lg font-semibold">
@@ -149,7 +154,7 @@ Welcome Back
     </h2>
 
     <button
-      onClick={handleMatches}
+      onClick={viewProfiles}
       className="text-sm text-pink-600 hover:underline"
     >
       View All →
@@ -161,7 +166,7 @@ Welcome Back
       No profiles available
     </p>
   ) : (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {profiles.slice(0, 4).map((p) => (
         <div
           key={p._id}
@@ -208,7 +213,7 @@ Discover compatible profiles.
 
 <button
 className="bg-pink-600 text-white px-4 py-2 rounded"
-onClick={handleMatches}
+onClick={viewMatches}
 >
 Explore
 </button>

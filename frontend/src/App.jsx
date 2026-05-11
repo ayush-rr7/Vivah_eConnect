@@ -36,9 +36,6 @@ function App() {
   const [count, setCount] = useState(0)
 const { loading } = useAuth();
 
-if (loading) {
-  return <FullScreenLoader />;
-}
   return (
     <div className="min-h-screen flex flex-col">
     

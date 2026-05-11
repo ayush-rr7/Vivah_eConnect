@@ -51,9 +51,9 @@ alert(res.data.message);
         {/* MAIN LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-3 min-h-[700px]">
 
-          {/* ================================= */}
+          
           {/* LEFT VERTICAL CONTAINER - IMAGE */}
-          {/* ================================= */}
+          
           <div className="relative bg-gray-100 flex flex-col">
 
             <div
@@ -97,10 +97,9 @@ alert(res.data.message);
             </div>
           </div>
 
-          {/* ================================= */}
           {/* RIGHT SIDE */}
-          {/* 2 HORIZONTAL CONTAINERS */}
-          {/* ================================= */}
+          
+         
           <div className="lg:col-span-2 flex flex-col">
 
             {/* TOP RIGHT CONTAINER */}

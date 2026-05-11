@@ -8,6 +8,8 @@ function Register() {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
+
+  //UI STYLING
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState([]);
   const [timer, setTimer] = useState(30);
