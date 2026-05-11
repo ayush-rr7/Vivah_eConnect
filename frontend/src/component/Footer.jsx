@@ -1,8 +1,13 @@
+import { useLocation } from "react-router-dom";
 function Footer() {
 
   const linkStyle = "text-sm hover:text-white transition-colors";
   const headingStyle = "text-white font-semibold mb-3";
+   const location = useLocation();
 
+  if (location.pathname.startsWith("/chat")) {
+    return null; // don't render footer on chat pages
+  }
   return (
     <footer className="bg-gray-900 min-w-full  text-gray-300 mt-0.5 ">
 

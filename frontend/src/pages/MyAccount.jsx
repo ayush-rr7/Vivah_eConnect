@@ -1,149 +1,219 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import profile2 from "../assets/profile2.png";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import {SkeletonCard,SkeletonUser} from "../component/skeleton.jsx"
-
+import { SkeletonCard, SkeletonUser } from "../component/skeleton.jsx";
 
 function MyAccount() {
+  const {
+    user,
+    loading,
+    profiles,
+    activeProfileId,
+    setActiveProfileId,
+  } = useAuth();
 
+  const navigate = useNavigate();
 
-const { user, loading,profiles, activeProfileId, setActiveProfileId } = useAuth();
-
-const handleActiveProfile = (profileId, e) => {
-  e.preventDefault();
-  setActiveProfileId(profileId);
-};
-const navigate = useNavigate();
+  const handleActiveProfile = (profileId, e) => {
+    e.preventDefault();
+    setActiveProfileId(profileId);
+  };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 py-6 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
 
-    {/* Header */}
-    <h1 className="text-3xl text-center font-semibold text-gray-800 mb-6">
-      My Account
-    </h1>
+      <div className="max-w-7xl mx-auto space-y-8">
 
-    {/* User Info Card */}
-    <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md p-6 flex items-center gap-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-800">
+            My Account
+          </h1>
 
-      <img
-        src={profile2}
-        alt="profile"
-        className="h-24 w-24 object-cover rounded-full border-4 border-pink-200"
-      />
+          <p className="text-gray-500 mt-2">
+            Manage your profiles and partner preferences
+          </p>
+        </div>
 
-      {loading ? (
-        <SkeletonUser />
-      ) : (
-        user && (
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">
-              {user.name}
-            </h2>
-            <p className="text-gray-600 text-sm">{user.email}</p>
-            <p className="text-gray-500 text-sm">{user.city}</p>
+        {/* User Card */}
+        <section className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
 
-            <Link
-              to={`/PartnerPreferences`}
-              className="inline-block mt-2 text-pink-600 text-lg hover:underline"
-            >
-              Edit Partner Preferences →
-            </Link>
-          </div>
-        )
-      )}
-    </div>
+          {loading ? (
+            <SkeletonUser />
+          ) : (
+            user && (
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
 
-    {/* Profiles Section */}
-    <div className="max-w-6xl mx-auto mt-8">
+                {/* Image */}
+                <div className="relative">
+                  <img
+                    src={profile2}
+                    alt="profile"
+                    className="h-28 w-28 object-cover rounded-full border-4 border-pink-100 shadow-sm"
+                  />
 
-      <h2 className="text-xl font-semibold mb-4 text-gray-700">
-        Your Profiles
-      </h2>
+                  <div className="absolute bottom-1 right-1 h-4 w-4 bg-green-500 border-2 border-white rounded-full" />
+                </div>
 
-      <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-6">
+                {/* User Info */}
+                <div className="flex-1 text-center md:text-left">
 
-        {loading
-          ? Array(6).fill().map((_, i) => <SkeletonCard key={i} />)
-          : profiles?.map((u) => (
-              <div
-                key={u._id}
-                className={` w-xs bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1
-                ${activeProfileId === u._id ? "ring-2 ring-green-500" : ""}`}
-              >
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    {user.name}
+                  </h2>
 
-              <Link to={`/profile/${u._id}`}
-                    className="flex items-center gap-4 p-1"
-                  >
-                    {/* Profile Image */}
-                    <div className="h-40 w-32 flex-shrink-0 overflow-hidden rounded-lg">
-                      <img
-                        src={u.Images[0]}
-                        alt="profile"
-                        className="w-full h-full object-cover object-[center_25%]"
-                      />
-                    </div>
+                  <p className="text-gray-500 mt-1">
+                    {user.email}
+                  </p>
 
-                    {/* Profile Info */}
-                    <div className="flex-1 space-y-2 text-sm">
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {u.Name}
-                      </h3>
+                  <p className="text-gray-500">
+                    {user.city}
+                  </p>
 
-                      <p className="text-gray-500">
-                        {u.Age} yrs • {u.Gender}
-                      </p>
-
-                      <p className="text-gray-600">{u.Caste}</p>
-
-                      <p className="text-green-600 font-medium">
-                        ₹ {u.Income}
-                      </p>
-
-                      <span className="inline-block bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs">
-                        {u.Martial_Status}
-                      </span>
-                    </div>
-                  </Link>
-
-               <div className="px-4 pb-4">
-
-  {activeProfileId === u._id ? (
-    <p className="text-green-600 font-semibold text-sm mb-2">
-      Active Profile
-    </p>
-  ) : null}
-
-  <div className="flex gap-2">
-
-    {/* Set Active */}
-    {activeProfileId !== u._id && (
-      <button
-        onClick={(e) => handleActiveProfile(u._id, e)}
-        className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition"
-      >
-        Set Active
-      </button>
-    )}
-
-    {/* Edit */}
-    <button
-      onClick={() => navigate(`/profile/edit/${u._id}`)}
-      className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg text-sm transition"
-    >
-      Edit
-    </button>
-
-  </div>
-</div>
+                  <div className="mt-5">
+                    <Link
+                      to="/PartnerPreferences"
+                      className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-5 py-2.5 rounded-xl transition duration-300 shadow-sm"
+                    >
+                      Edit Partner Preferences
+                    </Link>
+                  </div>
+                </div>
               </div>
-            ))}
+            )
+          )}
+        </section>
+
+        {/* Profiles Section */}
+        <section>
+
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Your Profiles
+              </h2>
+
+              <p className="text-gray-500 text-sm mt-1">
+                {profiles?.length || 0} profiles available
+              </p>
+            </div>
+          </div>
+
+          {/* Profiles Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+
+            {loading
+              ? Array(6)
+                  .fill()
+                  .map((_, i) => <SkeletonCard key={i} />)
+              : profiles?.map((u) => (
+                <div
+  key={u._id}
+  onClick={() => setActiveProfileId(u._id)}
+  className={`
+    relative cursor-pointer bg-white rounded-3xl overflow-hidden
+    border transition-all duration-300
+    hover:shadow-xl hover:-translate-y-1
+    ${
+  activeProfileId === u._id
+    ? "border-green-500 ring-4 ring-green-100 shadow-lg"
+    : "border-gray-100 shadow-sm hover:border-green-200"
+}
+  `}
+>
+  
+  {/* Active Badge */}
+  {activeProfileId === u._id && (
+    <div className="absolute top-4 right-4 z-10">
+    <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+  Active
+</span>
+    </div>
+  )}
+
+  <div className="p-4">
+
+    <div className="flex gap-4">
+
+      {/* Image */}
+      <div className="h-44 w-32 overflow-hidden rounded-2xl flex-shrink-0">
+        <img
+          src={u.Images[0]}
+          alt="profile"
+          className="w-full h-full object-cover object-[center_25%]"
+        />
+      </div>
+
+      {/* Info */}
+      <div className="flex flex-col justify-between flex-1">
+
+        <div className="space-y-2">
+
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800">
+              {u.Name}
+            </h3>
+
+            <p className="text-gray-500 text-sm mt-1">
+              {u.Age} yrs • {u.Gender}
+            </p>
+          </div>
+
+          <p className="text-gray-600 text-sm">
+            {u.Caste}
+          </p>
+
+          <p className="text-green-600 font-semibold">
+            ₹ {u.Income}
+          </p>
+
+          <span className="inline-block bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-medium">
+            {u.Martial_Status}
+          </span>
+        </div>
+
+        {/* Active text */}
+        <div className="mt-4">
+          {activeProfileId === u._id ? (
+            <p className="text-sm text-green-600 font-medium">
+  Currently Active Profile
+</p>
+          ) : (
+            <p className="text-sm text-gray-400">
+              Click card to activate
+            </p>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
 
+    {/* Footer */}
+    <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/profile/edit/${u._id}`);
+        }}
+        className="
+          px-5 py-2 rounded-xl
+          bg-gray-100 hover:bg-gray-200
+          text-gray-700 font-medium text-sm
+          transition
+        "
+      >
+        Edit Profile
+      </button>
+
+    </div>
+  </div>
+</div>
+                ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
 }
+
 export default MyAccount;
