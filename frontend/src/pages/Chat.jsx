@@ -245,8 +245,8 @@ function Chat() {
                       text-[10px]
                       ${
                         isMe
-                          ? "text-pink-100"
-                          : "text-gray-400"
+                          ? "text-pink-50"
+                          : "text-gray-600"
                       }
                     `}
                   >
@@ -272,6 +272,7 @@ function Chat() {
           <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2">
 
             <input
+             aria-label="Message input"
               type="text"
               value={message}
               placeholder="Type a message..."
@@ -289,6 +290,7 @@ function Chat() {
             />
 
             <button
+               type="button"
               onClick={sendMessage}
               className="
                 bg-pink-500 hover:bg-pink-600

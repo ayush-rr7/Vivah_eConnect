@@ -1,5 +1,5 @@
-import hero from '../assets/hero.png'
-import couple from '../assets/couple.png'
+import hero from '../assets/hero.avif'
+import couple from '../assets/couple.avif'
 import { Link } from 'react-router-dom'
 
 function Home(){
@@ -24,7 +24,11 @@ Connecting hearts, families, and traditions through meaningful relationships.
   <Link to="/signup"  className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg transition">Get Started</Link>
 
 
-<Link to="/login"  className="border border-pink-600 hover:bg-pink-600 hover:text-white text-pink-600 px-6 py-3 rounded-lg transition">
+<Link to="/login"  className="border border-pink-700
+  text-pink-700
+  hover:bg-pink-700
+  hover:text-white
+  px-6 py-3 rounded-lg transition">
 Explore Matches
 </Link>
 </div>
@@ -33,6 +37,7 @@ Explore Matches
 <div className="flex justify-center">
 <img 
 src={hero} 
+ alt="Vivah Connect Hero"
 className="rounded-xl shadow-lg w-full max-h-105 object-cover"
 />
 </div>
@@ -121,6 +126,7 @@ Why Choose Vivah E-Connect?
 <div className="flex justify-center">
 <img
 src={couple}
+alt="Vivah Connect Couple"
 className="rounded-xl shadow-lg w-full max-h-105 object-cover"
 />
 </div>

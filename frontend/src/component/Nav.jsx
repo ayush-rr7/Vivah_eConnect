@@ -89,12 +89,20 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button
+        {/* <button
           className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        </button> */
+        <button type="button"
+        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={menuOpen}
+        className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+  {menuOpen ? <X size={24} /> : <Menu size={24} />}
+</button>}
       </div>
 
       {/* Mobile Menu */}
