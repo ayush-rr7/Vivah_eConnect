@@ -1,67 +1,110 @@
-const MatchCard = ({ data }) => {
+import { useEffect, useState, useCallback, useMemo } from "react";
+import MatchCard from "../component/matchCard";
+import { SkeletonCard } from "../component/skeleton";
+import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
+
+const MatchesPage = () => {
+  const { loading: authLoading, activeProfileId: profileId } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+
+  const [data, setData] = useState({
+    perfect: [],
+    strong: [],
+    explore: [],
+  });
+
+  // stable skeleton array (prevents re-creation every render)
+  const skeletonArray = useMemo(() => Array(6).fill(0), []);
+
+  // stable API call (prevents function recreation)
+  const fetchMatches = useCallback(async (id, signal) => {
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const res = await api.get(`/matches/${id}`, { signal });
+      setData(res.data);
+    } catch (err) {
+      if (err.name !== "CanceledError") {
+        console.error("Failed to load matches:", err);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // safe fetch with abort controller (prevents race conditions)
+  useEffect(() => {
+    if (!profileId) return;
+
+    const controller = new AbortController();
+
+    fetchMatches(profileId, controller.signal);
+
+    return () => controller.abort();
+  }, [profileId, fetchMatches]);
+
+  const isLoading = loading || authLoading;
+
+  // optimized section renderer
+  const renderSection = useCallback((title, matches) => {
+    return (
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 min-h-[420px]">
+
+        {/* HEADER */}
+        <div className="mb-4 sm:mb-5">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
+            {title}
+          </h2>
+
+          {!isLoading && (
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              {matches.length} profiles found
+            </p>
+          )}
+        </div>
+
+        {/* GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+
+          {isLoading
+            ? skeletonArray.map((_, i) => (
+                <SkeletonCard key={i} />
+              ))
+            : matches.map((p) => (
+                <MatchCard key={p._id} data={p} />
+              ))
+          }
+
+        </div>
+
+        {/* EMPTY STATE */}
+        {!isLoading && matches.length === 0 && (
+          <div className="text-center py-8 text-gray-500 text-sm">
+            No matches found
+          </div>
+        )}
+
+      </section>
+    );
+  }, [isLoading, skeletonArray]);
+
   return (
-   
-<a
-  href={`/profile/${data._id}`}
-  className="block rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
->
-  {/* Image Section */}
-  <div className="relative overflow-hidden">
-    <img
-      src={data.images?.[0]}
-      alt="profile"
-      className="h-64 w-full object-cover object-[center_25%] transition-transform duration-500 hover:scale-105"
-    />
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-8 px-3 sm:px-4">
 
-    {/* Stronger Gradient */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent"></div>
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
 
-    {/* Name + Age */}
-    <div className="absolute bottom-3 left-4 text-white">
-      <h2 className="text-xl font-semibold tracking-wide">
-        {data.name}
-      </h2>
-      <p className="text-sm opacity-90">Age {data.age}</p>
+        {renderSection("Perfect Matches", data.perfect)}
+        {renderSection("Strong Matches", data.strong)}
+        {renderSection("Explore More", data.explore)}
+
+      </div>
+
     </div>
-  </div>
-
-  {/* Info Section */}
-  <div className="p-4 space-y-3">
-
-    {/* Badges */}
-    <div className="flex flex-wrap gap-2 text-xs font-medium">
-
-      <span className="bg-pink-100 text-pink-600 text-sm px-3 py-1 rounded-full">
-        ❤️ {data.compatibility}%
-      </span>
-
-      <span className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full">
-        📍 {data.location}
-      </span>
-
-      <span className="bg-green-100 text-green-600 text-sm px-3 py-1 rounded-full">
-        ₹ {data.income}
-      </span>
-      <span className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-full">
-         {data.age}y
-      </span>
-    </div>
-
-    {/* Status */}
-    <p className="text-gray-500 text-sm">
-      {data.maritalStatus}
-    </p>
-
-    {/* Divider */}
-    <div className="border-t"></div>
-
-    {/* CTA */}
-    <button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white py-2.5 rounded-xl font-medium tracking-wide hover:opacity-90 transition">
-      View Profile
-    </button>
-  </div>
-</a>
-  );   
+  );
 };
 
-export default MatchCard;
+export default MatchesPage;
