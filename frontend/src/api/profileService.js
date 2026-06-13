@@ -18,7 +18,7 @@ export const editProfiles = (id,data) => {
 
 export const getProfiles = (id, page = 1) => {
   return api.get(
-    `api/getProfile/${id}?page=${page}&limit=15`
+    `api/getProfile/${id}?page=${page}&limit=12`
   );
 };
 
