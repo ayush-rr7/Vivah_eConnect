@@ -1,21 +1,12 @@
 import { useEffect, useState } from "react";
-import profile2 from  "../assets/profile2.png"
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getProfiles } from "../api/profileService.js";
 import { SkeletonCard } from "../component/skeleton.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import { optimizeImage } from "../utils/ImgOptimizer.js";
 
 function ProfileList() {
 
- 
-  const optimizeImage = (url) => {
-  if (!url) return profile2;
-
-  return url.replace(
-    "/upload/",
-    "/upload/f_auto,q_auto,w_600,h_900,c_fill/"
-  );
-};
 
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);

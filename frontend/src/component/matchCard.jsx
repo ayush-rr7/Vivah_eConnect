@@ -1,20 +1,6 @@
-import profile2 from "../assets/profile2.png";
+import { optimizeImage } from "../utils/ImgOptimizer";
 
 const MatchCard = ({ data }) => {
-
-  const optimizeImage = (url, width = 400) => {
-    if (!url) return profile2;
-
-    if (url.includes("res.cloudinary.com")) {
-      return url.replace(
-        "/upload/",
-        `/upload/f_auto,q_auto,w_${width}/`
-      );
-    }
-
-    return url;
-  };
-
   return (
     <a
       href={`/profile/${data._id}`}
@@ -32,11 +18,11 @@ const MatchCard = ({ data }) => {
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
 
         <img
-          src={optimizeImage(data?.images?.[0], 500)}
+          src={optimizeImage(data?.images?.[0],400, 600)}
           alt="profile"
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover object-[center_10%]"
+          className="w-full h-full object-cover object-[center_15%]"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />

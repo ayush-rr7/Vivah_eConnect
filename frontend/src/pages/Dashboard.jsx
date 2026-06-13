@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {getProfiles} from '../api/profileService.js'
-
+import { optimizeImage } from "../utils/ImgOptimizer";
 
 
 function Dashboard() {
@@ -172,10 +172,13 @@ Welcome Back
           key={p._id}
           className="bg-pink-50 rounded-lg p-3 hover:shadow transition"
         >
-          <img
-            src={p.Images?.[0]}
-            className="h-40 w-full object-cover object-[center_20%] rounded-md mb-2 "
-          />
+        <img
+            src={optimizeImage(p.Images?.[0], 400, 500)}
+            alt="profile"
+            loading="lazy"
+            decoding="async"
+            className="h-40 w-full object-cover object-[center_15%] rounded-md mb-2"
+        />
 
           <h3 className="text-sm font-semibold">
             {p.Name}
