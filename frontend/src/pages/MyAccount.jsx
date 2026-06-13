@@ -2,6 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import profile2 from "../assets/profile2.png";
 import { useAuth } from "../context/AuthContext.jsx";
 import { SkeletonCard, SkeletonUser } from "../component/skeleton.jsx";
+import { optimizeImage } from "../utils/ImgOptimizer";
+
+
 
 function MyAccount() {
   const {
@@ -138,7 +141,8 @@ function MyAccount() {
       {/* Image */}
       <div className="h-44 w-32 overflow-hidden rounded-2xl flex-shrink-0">
         <img
-          src={u.Images[0]}
+          // src={u.Images[0]}
+           src={optimizeImage(u.Images?.[0],400, 550)}
           alt="profile"
           className="w-full h-full object-cover object-[center_25%]"
         />
