@@ -11,19 +11,24 @@ const navigate = useNavigate();
 
 
 const [profiles, setProfiles] = useState([]);
+const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   const fetchProfiles = async () => {
     try {
-      const res =await getProfiles(profileId);
+      const res = await getProfiles(profileId);
       setProfiles(res.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  fetchProfiles();
-}, []);
+  if (profileId) {
+    fetchProfiles();
+  }
+}, [profileId]);
 
 const viewMatches = () => {
   navigate("/matches");
@@ -161,7 +166,25 @@ Welcome Back
     </button>
   </div>
 
-  {profiles.length === 0 ? (
+{loading ? (
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    {[...Array(4)].map((_, index) => (
+      <div
+        key={index}
+        className="bg-pink-50 rounded-lg p-3"
+      >
+        <div className="h-40 w-full rounded-md bg-pink-100 animate-pulse mb-2" />
+
+        <div className="h-4 w-3/4 bg-pink-100 animate-pulse rounded mb-2" />
+
+        <div className="h-3 w-1/2 bg-pink-100 animate-pulse rounded mb-3" />
+
+        <div className="h-3 w-20 bg-pink-100 animate-pulse rounded" />
+      </div>
+    ))}
+  </div>
+):
+  profiles.length === 0 ? (
     <p className="text-sm text-gray-500">
       No profiles available
     </p>
@@ -175,7 +198,7 @@ Welcome Back
         <img
             src={optimizeImage(p.Images?.[0], 400, 500)}
             alt="profile"
-            loading="lazy"
+             fetchPriority="high"
             decoding="async"
             className="h-40 w-full object-cover object-[center_15%] rounded-md mb-2"
         />
@@ -199,6 +222,7 @@ Welcome Back
     </div>
   )}
 </div>
+
 
 {/* Action Cards */}
 
